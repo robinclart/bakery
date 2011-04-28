@@ -21,16 +21,6 @@ module Bakery
   
   autoload :Helpers,    "bakery/helpers"
 
-  module Paths
-    def root
-      Pathname.new File.expand_path('.')
-    end
-
-    def public_folder
-      root + 'public'
-    end
-  end
-
   module Config
     def config
       @@config ||= OpenStruct.new({
@@ -49,13 +39,9 @@ module Bakery
     end
 
     def configure!
-      load "#{Bakery.root}/Bakefile"
-    rescue LoadError
-      puts "Not a bakery repository. Run 'bakery init' first"
-      exit
+      load "Bakefile"
     end
   end
 
-  extend Paths
   extend Config
 end
