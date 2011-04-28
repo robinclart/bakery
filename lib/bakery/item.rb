@@ -38,9 +38,8 @@ module Bakery
       private
 
       def interpolate_output_directory
-        output_model_directory = Bakery.config.output_directories[modelname.intern].clone
-
-        unless output_model_directory.nil?
+        unless Bakery.config.output_directories[modelname.intern].nil?
+          output_model_directory = Bakery.config.output_directories[modelname.intern].clone
           output_model_directory.scan(/:([a-z0-9_-]+)/i,).flatten.each do |m|
             if data.published_at and m.match(/^year|month|day$/)
               output_model_directory.sub!(/:#{m}/, Date.parse(data.published_at).send(m).to_s)
@@ -48,9 +47,8 @@ module Bakery
               output_model_directory.sub!(/\/:#{m}/, "")
             end
           end
+          output_model_directory
         end
-
-        output_model_directory
       end
     end
 
