@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title><%= e.class.name %></title>
+    <style media="screen">
+      body {
+        margin: 2em 3em;
+        padding: 0;
+        font-family: sans-serif;
+      }
+      .box {
+        background: #e0e0e0;
+        padding: 1em;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      <%= e.class.name %> in
+      <a href="txmt://open/?url=file://<%= File.absolute_path(template_path) %>&line=<%= e.backtrace.first.split(":")[1] %>">
+        <%= template_path %>
+      </a>
+    </h1>
+    <p class="box"><%=ERB::Util.h e.message %></p>
+    <h2>Backtrace</h2>
+    <pre class="box"><code><%=ERB::Util.h e.backtrace.join("\n") %></code></pre>
+    <h2><%=ERB::Util.h modelname.capitalize %></h2>
+    <pre class="box"><code>path: <%=ERB::Util.h path %>
+output_path: <%=ERB::Util.h output_path %>
+basename: <%=ERB::Util.h basename %>
+extname: <%=ERB::Util.h extname %>
+template_path: <%=ERB::Util.h template_path %>
+markdown: <%= "true" if !!path.match(/.md$/) %></code></pre>
+    <h2>Data</h2>
+    <pre class="box"><code>data: <%=ERB::Util.h data.instance_variable_get(:@table).inspect %></code></pre>
+  </body>
+</html>

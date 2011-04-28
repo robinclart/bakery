@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+$:.unshift File.expand_path("../../lib", __FILE__)
+
+require 'bakery'
+require 'bakery/generators'
+
+# Invoke the compile command if there is no arguments or if the first argument
+# match --force or match -f or match an existing file.
+if ARGV.empty? || ARGV.first.match(/^-f|--force$/) || File.exist?(ARGV.first)
+  ARGV.unshift "compile"
+end
+
+if !!ARGV.first.match(/^-v|--version$/)
+  puts "bakery v#{Bakery::VERSION}"
+  exit
+end
+
+if File.exist?('Bakefile') || ARGV.first.eql?("init")
+  Bakery::Generators.invoke ARGV.shift
+else
+  puts "This is not a bakery. Please run 'bake init' first."
+end
+
+exit # bye
