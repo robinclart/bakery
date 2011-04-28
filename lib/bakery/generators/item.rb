@@ -16,7 +16,6 @@ module Bakery
       end
 
       def setup
-        say_status "load", "Bakefile", :cyan
         Bakery.configure!
       end
 

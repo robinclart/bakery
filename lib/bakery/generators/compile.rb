@@ -9,7 +9,6 @@ module Bakery
       class_option :force, :optional => true, :default => false, :aliases => ["-f"]
 
       def setup
-        say_status "load", "Bakefile", :cyan
         Bakery.configure!
       end
 
