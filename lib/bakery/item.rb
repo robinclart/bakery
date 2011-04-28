@@ -38,7 +38,7 @@ module Bakery
       private
 
       def interpolate_output_directory
-        output_model_directory = Bakery.config.output_directories[modelname.intern]
+        output_model_directory = Bakery.config.output_directories[modelname.intern].clone
 
         unless output_model_directory.nil?
           output_model_directory.scan(/:([a-z0-9_-]+)/i,).flatten.each do |m|
