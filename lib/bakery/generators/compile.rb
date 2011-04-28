@@ -40,18 +40,22 @@ module Bakery
       end
 
       def create_item_file(item)
-        say_status "compile", "#{item.path} -> #{item.template_path}", :cyan
-        output_content = item.output!
+        if item.data.published        
+          say_status "compile", "#{item.path} -> #{item.template_path}", :cyan
+          output_content = item.output!
 
-        if item.output_error
-          remove_file item.output_path, :verbose => false
-          say_status "error", item.output_path, :red
-          say "Run 'open #{item.output_path}' for more information on the error."
-          say "Once you have fixed the issue run 'bake #{item.path} -f' to recompile it."
+          if item.output_error
+            remove_file item.output_path, :verbose => false
+            say_status "error", item.output_path, :red
+            say "Run 'open #{item.output_path}' for more information on the error."
+            say "Once you have fixed the issue run 'bake #{item.path} -f' to recompile it."
+          end
+
+          create_file item.output_path, output_content, :verbose => !item.output_error
+          exit if item.output_error
+        else
+          say_status :skip, item.path, :yellow
         end
-
-        create_file item.output_path, output_content, :verbose => !item.output_error
-        exit if item.output_error
       end
     end
   end

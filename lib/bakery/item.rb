@@ -32,7 +32,25 @@ module Bakery
       end
 
       def output_directory
-        Bakery.config.output_directories[modelname.intern] || "public/#{base_directory}"
+        interpolate_output_directory || "public/#{base_directory}"
+      end
+
+      private
+
+      def interpolate_output_directory
+        output_model_directory = Bakery.config.output_directories[modelname.intern]
+
+        unless output_model_directory.nil?
+          output_model_directory.scan(/:([a-z0-9_-]+)/i,).flatten.each do |m|
+            if data.published_at and m.match(/year|month|day/)
+              output_model_directory.sub!(/:#{m}/, Date.parse(data.published_at).send(m).to_s)
+            else
+              output_model_directory.sub!(/\/:#{m}/, "")
+            end
+          end
+        end
+
+        output_model_directory
       end
     end
 
@@ -82,7 +100,7 @@ module Bakery
       private
 
       def template_name
-        available_template_names.first or "index.html"
+        available_template_names.first or fallback_template_name
       end
 
       def available_template_names
@@ -92,11 +110,7 @@ module Bakery
       end
 
       def hypothetical_template_names
-        [data_template_name, base_template_name, model_template_name].compact
-      end
-
-      def data_template_name
-        data.template
+        [data.template, base_template_name, model_template_name].compact
       end
 
       def base_template_name
