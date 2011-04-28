@@ -42,7 +42,7 @@ module Bakery
 
         unless output_model_directory.nil?
           output_model_directory.scan(/:([a-z0-9_-]+)/i,).flatten.each do |m|
-            if data.published_at and m.match(/year|month|day/)
+            if data.published_at and m.match(/^year|month|day$/)
               output_model_directory.sub!(/:#{m}/, Date.parse(data.published_at).send(m).to_s)
             else
               output_model_directory.sub!(/\/:#{m}/, "")
