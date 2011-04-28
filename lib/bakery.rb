@@ -57,6 +57,5 @@ module Bakery
   end
 
   extend Paths
-  extend Helpers
   extend Config
 end
