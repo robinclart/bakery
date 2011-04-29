@@ -68,6 +68,12 @@ module Bakery
         modelname.pluralize
       end
 
+      # Returns the output directory of an item. See the head of this module for
+      # more information about the output directory interpolation.
+      #
+      # By default the items from the "page" model will be rendered at
+      # the root of the public directory. All the other models that you have
+      # supplied in your Bakefile will be rendered in "public/:base_directory"
       def output_directory
         dir = Bakery.config.output_directories[modelname.intern]
 
