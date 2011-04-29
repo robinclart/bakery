@@ -41,13 +41,8 @@ module Bakery
       end
 
       def output_directory
-        dir = Bakery.config.output_directories[modelname.intern]
-
-        if dir
-          interpolate_output_directory(dir.clone)
-        else
-          File.join("public", base_directory)
-        end
+        dir = Bakery.config.output_directories[modelname.intern] || ":base"
+        interpolate_output_directory(dir.clone)
       end
 
       private
@@ -63,7 +58,7 @@ module Bakery
           end
         end
 
-        dir
+        File.join("public", dir).sub(/\/+$/, "")
       end
 
       def date_chunk(m)
