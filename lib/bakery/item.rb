@@ -18,6 +18,8 @@ module Bakery
     attr_reader :modelname
     attr_reader :output_error
 
+    # Returns a context instance tied to the current item. All items will be
+    # rendered through this context.
     def context
       @context ||= Context.new(self)
     end
