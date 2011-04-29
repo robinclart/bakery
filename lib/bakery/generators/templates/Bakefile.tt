@@ -21,4 +21,6 @@ Bakery.configure do
   #   :remote_path => '/var/www/example.com/'
   # }
 
+  # config.helpers += []
+
 end
