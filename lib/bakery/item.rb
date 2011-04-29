@@ -42,7 +42,12 @@ module Bakery
 
       def output_directory
         dir = Bakery.config.output_directories[modelname.intern]
-        dir ? interpolate_output_directory(dir.clone) : File.join("public", base_directory)
+
+        if dir
+          interpolate_output_directory(dir.clone)
+        else
+          File.join("public", base_directory)
+        end
       end
 
       private
@@ -71,7 +76,8 @@ module Bakery
         context.render(template_content) { to_html }
       rescue => e
         @output_error = e
-        ERB.new(File.read(File.expand_path("../templates/error.html.erb", __FILE__))).result(binding)
+        error_template_path = File.expand_path("../templates/error.html.erb", __FILE__)
+        ERB.new(File.read(error_template_path)).result(binding)
       end
 
       def raw
