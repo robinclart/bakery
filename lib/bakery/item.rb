@@ -26,6 +26,15 @@ module Bakery
       Bakery.config.helpers.each { |h| context.extend h }
     end
 
+    def self.all(model = nil)
+      list(model).map { |p| self.new(p) }
+    end
+
+    def self.list(model = nil)
+      model = model ? model.pluralize : Bakery.config.models.map(&:pluralize).join(",")
+      Dir[File.join("{#{model}}", "**", "*.*")]
+    end
+
     module Directories
       def base_directory
         modelname.pluralize
@@ -133,26 +142,8 @@ module Bakery
       end
     end
 
-    module Finder
-      def find(r)
-        list.each { |p| return self.new(p) if p.match(r) }
-
-        nil
-      end
-
-      def all(model = nil)
-        list(model).map { |p| self.new(p) }
-      end
-
-      def list(model = nil)
-        model = model ? model.pluralize : Bakery.config.models.map(&:pluralize).join(",")
-        Dir[File.join("{#{model}}", "**", "*.*")]
-      end
-    end
-
     include Directories
     include Extraction
     include Template
-    extend Finder
   end
 end
