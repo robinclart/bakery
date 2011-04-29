@@ -39,6 +39,27 @@ module Bakery
       Dir[File.join("{#{model}}", "**", "*.*")]
     end
 
+    # == Bakery Directories
+    #
+    # === Output Directory Interpolation
+    #
+    # If the output directory have been overwritten in the Bakefile the path
+    # will be interpolated. Every instances of the :day, :month, :year, :base
+    # and :base_directory keywords will be:
+    #
+    # - replaced by the value of the day, month, year of the published_at
+    #   field if it is present in the YAML Front Matter.
+    # - replaced by the value of the base directory (for the :base and
+    #   the :base_directory keywords).
+    # - removed if none of the previous conditions were fulfilled.
+    #
+    # Example of interpolation configuration one can found in a Bakefile:
+    #
+    #   config.output_directories.merge!({
+    #     :post => "public/:base/:year/:month/:day"
+    #   })
+    #
+    # This will give: "public/posts/2011/4/29/hello-world.html".
     module Directories
       def base_directory
         modelname.pluralize
