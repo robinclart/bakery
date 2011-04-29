@@ -100,7 +100,7 @@ module Bakery
         dir
       end
 
-      def date_chunk(m)
+      def date_chunk(m) #:nodoc:
         Date.parse(data.published_at).send(m).to_s
       end
     end
