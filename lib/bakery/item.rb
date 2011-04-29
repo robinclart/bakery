@@ -61,6 +61,9 @@ module Bakery
     #
     # This will give: "public/posts/2011/4/29/hello-world.html".
     module Directories
+      # Returns the base directory of an item. The name of the directory is the
+      # pluralized version of the model name for a given item. For example a
+      # post item will return "posts".
       def base_directory
         modelname.pluralize
       end
