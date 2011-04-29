@@ -102,15 +102,6 @@ module Bakery
         @template_content ||= File.read(template_path)
       end
 
-      # This method will go down the template lookup procedure and will
-      # return the first file path to match an existing file.
-      #
-      # The lookup order is as follow:
-      #
-      #   1 The template name supplied in the data section
-      #   2 A template with the same basename
-      #   3 A template with the name of the item class (Page, Post, etc…)
-      #   4 The index template file
       def template_path
         @template_path ||= resolve_template_path(template_basename)
       end
