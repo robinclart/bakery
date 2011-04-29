@@ -114,18 +114,25 @@ module Bakery
         ERB.new(File.read(error_template_path)).result(binding)
       end
 
+      # Returns the raw content from the item file.
       def raw
         @raw ||= File.read(path)
       end
 
+      # Returns all the content under the YAML Front Matter stil unprocessed.
       def content
         @content ||= raw.split(/---\n/).pop.lstrip
       end
 
+      # Returns all the content under the YAML Front Matter in HTML format.
+      # Depending if the file path ends with ".md" or not the content will be
+      # processed through <tt>Redcarpet</tt> or not.
       def to_html
         @html ||= path.match(/.md$/) ? Redcarpet.new(content).to_html : content
       end
 
+      # Returns a freezed OpenStruct loaded with all the data present in the
+      # YAML Front Matter.
       def data
         @data ||= OpenStruct.new(YAML.load(raw)).freeze
       end
