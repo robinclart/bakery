@@ -32,23 +32,26 @@ module Bakery
       end
 
       def output_directory
-        interpolate_output_directory || "public/#{base_directory}"
+        dir = Bakery.config.output_directories[modelname.intern]
+        dir ? interpolate_output_directory(dir.clone) : File.join("public", base_directory)
       end
 
       private
 
-      def interpolate_output_directory
-        unless Bakery.config.output_directories[modelname.intern].nil?
-          output_model_directory = Bakery.config.output_directories[modelname.intern].clone
-          output_model_directory.scan(/:([a-z0-9_-]+)/i,).flatten.each do |m|
-            if data.published_at and m.match(/^year|month|day$/)
-              output_model_directory.sub!(/:#{m}/, Date.parse(data.published_at).send(m).to_s)
-            else
-              output_model_directory.sub!(/\/:#{m}/, "")
-            end
+      def interpolate_output_directory(dir)
+        dir.scan(/:([a-z0-9_-]+)/i,).flatten.each do |m|
+          if data.published_at and m.match(/^year|month|day$/)
+            dir.sub!(/:#{m}/, date_chunk(m))
+          else
+            dir.sub!(/\/:#{m}/, "")
           end
-          output_model_directory
         end
+
+        dir
+      end
+
+      def date_chunk(m) #:nodoc:
+        Date.parse(data.published_at).send(m).to_s
       end
     end
 
