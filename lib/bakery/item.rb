@@ -112,7 +112,7 @@ module Bakery
       #   3 A template with the name of the item class (Page, Post, etc…)
       #   4 The index template file
       def template_path
-        @template_path ||= resolve_template_path(template_name)
+        @template_path ||= resolve_template_path(template_basename)
       end
 
       def template_basename
