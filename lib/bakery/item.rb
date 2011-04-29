@@ -48,7 +48,7 @@ module Bakery
       private
 
       def interpolate_output_directory(dir)
-        dir.scan(/:([a-z0-9_-]+)/i,).flatten.each do |m|
+        dir.scan(/:([a-z0-9_-]+)/i).flatten.each do |m|
           if m.match(/^year|month|day$/) and data.published_at
             dir.sub!(/:#{m}/, date_chunk(m))
           elsif m.match(/^base|base_directory$/)
