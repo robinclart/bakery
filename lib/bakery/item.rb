@@ -24,6 +24,8 @@ module Bakery
       @context ||= Context.new(self)
     end
 
+    # Extends the context with all the built-in helpers and with the helpers
+    # specified in the <tt>config.helpers</tt> statement from the Bakefile.
     def mix_helpers!
       Bakery.config.helpers.each { |h| context.extend h }
     end
