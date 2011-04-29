@@ -109,11 +109,11 @@ module Bakery
         @template_path ||= resolve_template_path(template_name)
       end
 
-      private
-
-      def template_name
+      def template_basename
         available_template_names.first or fallback_template_name
       end
+
+      private
 
       def available_template_names
         hypothetical_template_names.select do |name|
