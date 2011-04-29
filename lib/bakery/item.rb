@@ -26,7 +26,7 @@ module Bakery
       Bakery.config.helpers.each { |h| context.extend h }
     end
 
-    module Paths
+    module Directories
       def base_directory
         modelname.pluralize
       end
@@ -150,7 +150,7 @@ module Bakery
       end
     end
 
-    include Paths
+    include Directories
     include Extraction
     include Template
     extend Finder
