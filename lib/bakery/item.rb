@@ -11,12 +11,8 @@ module Bakery
       mix_helpers!
     end
 
-    attr_reader :path
-    attr_reader :output_path
-    attr_reader :basename
-    attr_reader :extname
-    attr_reader :modelname
-    attr_reader :output_error
+    attr_reader :path, :basename, :extname, :modelname,
+                :output_path, :output_error
 
     # Returns a context instance tied to the current item. All items will be
     # rendered through this context.
