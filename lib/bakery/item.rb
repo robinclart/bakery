@@ -41,27 +41,6 @@ module Bakery
       Dir[File.join("{#{model}}", "**", "*.*")]
     end
 
-    # == Bakery Directories
-    #
-    # === Output Directory Interpolation
-    #
-    # If the output directory have been overwritten in the Bakefile the path
-    # will be interpolated. Every instances of the :day, :month, :year, :base
-    # and :base_directory keywords will be:
-    #
-    # - replaced by the value of the day, month, year of the published_at
-    #   field if it is present in the YAML Front Matter.
-    # - replaced by the value of the base directory (for the :base and
-    #   the :base_directory keywords).
-    # - removed if none of the previous conditions were fulfilled.
-    #
-    # Example of interpolation configuration one can found in a Bakefile:
-    #
-    #   config.output_directories.merge!({
-    #     :post => "public/:base/:year/:month/:day"
-    #   })
-    #
-    # This will give: "public/posts/2011/4/29/hello-world.html".
     module Directories
       # Returns the base directory of an item. The name of the directory is the
       # pluralized version of the model name for a given item. For example a
@@ -70,12 +49,31 @@ module Bakery
         modelname.pluralize
       end
 
-      # Returns the output directory of an item. See the head of this module for
-      # more information about the output directory interpolation.
+      # Returns the output directory of an item.
       #
       # By default the items from the "page" model will be rendered at
       # the root of the public directory. All the other models that you have
       # supplied in your Bakefile will be rendered in "public/:base_directory"
+      #
+      # If the output directory have been overwritten in the Bakefile the path
+      # will be interpolated and every keywords found (a string beginning by a
+      # colon) found will be:
+      #
+      # - replaced by the value of the base directory (for the :base and
+      #   the :base_directory keywords).
+      # - replaced by the value of the day, month, year of the published_at
+      #   field if it is present in the YAML Front Matter (for the :day, :month
+      #   and :year keywords).
+      # - replaced by the value of the same keyword in the YAML Front Matter.
+      # - removed if none of the previous conditions were fulfilled.
+      #
+      # Example of interpolation configuration one can found in a Bakefile:
+      #
+      #   config.output_directories.merge!({
+      #     :post => ":base/:author/:year/:month/:day"
+      #   })
+      #
+      # This will give: "public/posts/john-doe/2011/4/29/hello-world.html".
       def output_directory
         dir = Bakery.config.output_directories[modelname.intern] || ":base"
         interpolate_output_directory(dir)
