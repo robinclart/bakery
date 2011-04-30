@@ -53,6 +53,11 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
     assert_equal "John Doe", @page.data.author
   end
 
+  def test_if_item_need_markdown_processing
+    assert @page.send(:markdown?)
+    refute @post.send(:markdown?)
+  end
+
   def test_template_path
     assert_equal "templates/index.html.erb", @page.template_path
   end

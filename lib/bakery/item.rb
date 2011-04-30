@@ -86,11 +86,17 @@ module Bakery
       end
 
       def to_html
-        @html ||= path.match(/.md$/) ? Redcarpet.new(content).to_html : content
+        @html ||= markdown? ? Redcarpet.new(content).to_html : content
       end
 
       def data
         @data ||= OpenStruct.new(YAML.load(raw)).freeze
+      end
+
+      private
+
+      def markdown?
+        !!path.match(/.md$/)
       end
     end
 
