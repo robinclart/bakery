@@ -9,18 +9,24 @@ module Bakery
 
     attr_reader :path, :output_error
 
+    # Returns the basename of the item's file without the ".md" if it's present.
     def basename
       @basename ||= File.basename(path, ".md")
     end
 
+    # Returns the extension of the item's basename.
     def extname
       @extname ||= File.extname(basename)
     end
 
+    # Return the item's model.
     def modelname
       @modelname ||= base_directory.singularize
     end
 
+    # Returns the base directory of an item. The name of the directory is the
+    # pluralized version of the model name for a given item. For example a
+    # post item will return "posts".
     def base_directory
       @base_directory ||= path.split(File::SEPARATOR).first
     end
@@ -49,16 +55,18 @@ module Bakery
     #     :post => ":base/:author/:year/:month/:day"
     #   })
     #
-    # This will give: "public/posts/john-doe/2011/4/29/hello-world.html".
+    # This will give: "public/posts/john-doe/2011/4/29".
     def output_directory
       dir = Bakery.config.output_directories[modelname.intern] || ":base"
       interpolate_output_directory(dir)
     end
 
+    # Returns the output path.
     def output_path
       @path.gsub(base_directory, output_directory).gsub(/.md$/, "")
     end
 
+    # Compiles the item into its template.
     def output!
       context.render(template.content) { to_html }
     rescue => e
@@ -72,13 +80,13 @@ module Bakery
       @template ||= Template.new(self)
     end
 
-    # Returns a context instance tied to the current item. All items will be
+    # Returns a Context instance tied to the current item. All items will be
     # rendered through this context.
     def context
       @context ||= Context.new(self)
     end
 
-    # Returns the raw content from the item file.
+    # Returns the raw content from the item's file.
     def raw
       @raw ||= File.read(path)
     end
