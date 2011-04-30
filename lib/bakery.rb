@@ -18,7 +18,7 @@ module Bakery
   autoload :Item,       "bakery/item"
   autoload :Template,   "bakery/template"
   autoload :Context,    "bakery/context"
-  autoload :Snippet,    "bakery/snippet"
+  autoload :Partial,    "bakery/partial"
   
   autoload :Helpers,    "bakery/helpers"
 

@@ -1,9 +1,9 @@
 module Bakery
-  class Snippet
+  class Partial
     attr_reader :path
 
     def initialize(name)
-      @path = File.join("snippets", "#{name}.html")
+      @path = File.join("templates", "_#{name}.erb")
     end
 
     def content

@@ -11,7 +11,7 @@ module Bakery
     end
 
     def partial(name)
-      render Snippet.new(name).content
+      render Partial.new(name).content
     end
 
     def markdown(source)
