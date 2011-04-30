@@ -7,3 +7,13 @@ Rake::TestTask.new do |t|
   t.test_files = FileList['test/test*.rb']
   t.verbose = false
 end
+
+require File.expand_path("../lib/bakery/version", __FILE__)
+desc "Build the documentation"
+task :doc do
+  sh [
+    "rm -rf doc/",
+    "sdoc -N -x generators -x test -x pkg -x bin -x '(Rake|Gem)file(.lock)?' -x 'bakery.gemspec' -m README -t 'Bakery #{Bakery::VERSION}'",
+    "open doc/index.html"
+  ].join(" && ")
+end
