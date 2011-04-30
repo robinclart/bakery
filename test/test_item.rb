@@ -27,6 +27,11 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
     assert_equal "public/blog/posts/john-doe/2011/4/29/test.html", @post.output_path
   end
 
+  def test_output_path_in_subdirectory
+    page = Bakery::Item.new("pages/sub/test.html.md")
+    assert_equal "public/sub/test.html", page.output_path
+  end
+
   def test_template
     assert_equal Bakery::Template, @page.template.class
   end
