@@ -47,7 +47,6 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
 
   def test_content
     content = "# Test\n\nHere comes some content"
-    assert_equal "public/blog/posts/john-doe/2011/4/29", @post.output_directory
   end
 
   def test_data

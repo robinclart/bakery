@@ -6,7 +6,7 @@ Bakery.configure do
 
   config.output_directories.merge!({
     :page => "",
-    :post => "blog/:base/:author/:year/:month/:day"
+    :post => "blog/:base/:author/:wrong/:year/:month/:day"
   })
 
 end
