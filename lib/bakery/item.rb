@@ -75,29 +75,26 @@ module Bakery
       # the root of the public directory. All the other models that you have
       # supplied in your Bakefile will be rendered in "public/:base_directory"
       def output_directory
-        dir = Bakery.config.output_directories[modelname.intern]
-
-        if dir
-          interpolate_output_directory(dir.clone)
-        else
-          File.join("public", base_directory)
-        end
+        dir = Bakery.config.output_directories[modelname.intern] || ":base"
+        interpolate_output_directory(dir)
       end
 
       private
 
       def interpolate_output_directory(dir) #:nodoc:
-        dir.scan(/:([a-z0-9_-]+)/i,).flatten.each do |m|
-          if m.match(/^year|month|day$/) and data.published_at
-            dir.sub!(/:#{m}/, date_chunk(m))
-          elsif m.match(/^base|base_directory$/)
-            dir.sub!(/:#{m}/, base_directory)
+        sections = dir.split(File::SEPARATOR).map do |section|
+          if section.eql?(":base")
+            base_directory
+          elsif section.match(/^:(year|month|day)$/)
+            data.published_at ? date_chunk($1) : ""
+          elsif data.send(section.gsub(":", ""))
+            data.send(section.gsub(":", "")).parameterize
           else
-            dir.sub!(/\/:#{m}/, "")
+            section.sub(/^:.*/, "")
           end
         end
 
-        dir
+        File.join *sections.unshift("public")
       end
 
       def date_chunk(m) #:nodoc:

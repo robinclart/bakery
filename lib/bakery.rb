@@ -27,7 +27,7 @@ module Bakery
         :root_url => "/",
         :models => ["page"],
         :output_directories => {
-          :page => "public"
+          :page => ""
         },
         :sync => {},
         :helpers => [Helpers::Data, Helpers::Url]
