@@ -17,32 +17,27 @@ module Bakery
 
   autoload :Item,       "bakery/item"
   autoload :Template,   "bakery/template"
-  autoload :Context,    "bakery/context"
   autoload :Partial,    "bakery/partial"
-  
+  autoload :Context,    "bakery/context"
   autoload :Helpers,    "bakery/helpers"
 
-  module Config
-    def config
-      @@config ||= OpenStruct.new({
-        :root_url => "/",
-        :models => ["page"],
-        :output_directories => {
-          :page => ""
-        },
-        :sync => {},
-        :helpers => [Helpers::Data, Helpers::Url]
-      })
-    end
-
-    def configure(&block)
-      module_eval(&block)
-    end
-
-    def configure!
-      load "Bakefile"
-    end
+  def config
+    @@config ||= OpenStruct.new({
+      :root_url => "/",
+      :models => ["page"],
+      :output_directories => {
+        :page => ""
+      },
+      :sync => {},
+      :helpers => [Helpers::Data, Helpers::Url]
+    })
   end
 
-  extend Config
+  def configure(&block)
+    module_eval(&block)
+  end
+
+  def configure!
+    load "Bakefile"
+  end
 end
