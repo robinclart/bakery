@@ -27,6 +27,10 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
     assert_equal "public/blog/posts/john-doe/2011/4/29/test.html", @post.output_path
   end
 
+  def test_template
+    assert_equal Bakery::Template, @page.template.class
+  end
+
   def test_context
     assert_equal Bakery::Context, @page.context.class
     assert_equal @page, @page.context.item
