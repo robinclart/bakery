@@ -32,6 +32,12 @@ module Bakery
       Bakery.config.helpers.each { |h| context.extend h }
     end
 
+    def self.where(conditions = {})
+      all(conditions.delete(:model)).select do |item|
+        conditions.all? { |k,v| item.data.send(k) == v }
+      end
+    end
+
     def self.all(model = nil)
       list(model).map { |p| self.new(p) }
     end
