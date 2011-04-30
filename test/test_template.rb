@@ -30,7 +30,13 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
     assert_equal "special.html", @page.template.from_data
   end
 
-  def test_base_template_name_when_index_html
+  def test_from_basename_when_index
+    assert_nil Bakery::Item.new("pages/index.htm").template.from_basename
+    assert_nil Bakery::Item.new("pages/index.html").template.from_basename
     assert_nil Bakery::Item.new("pages/index.html.md").template.from_basename
+  end
+
+  def test_resolve_path
+    assert_equal "templates/index.html.erb", @page.template.send(:resolve_path, "index.html")
   end
 end
