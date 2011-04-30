@@ -21,7 +21,7 @@ module Bakery
   autoload :Context,    "bakery/context"
   autoload :Helpers,    "bakery/helpers"
 
-  def config
+  def self.config
     @@config ||= OpenStruct.new({
       :root_url => "/",
       :models => ["page"],
@@ -33,11 +33,11 @@ module Bakery
     })
   end
 
-  def configure(&block)
+  def self.configure(&block)
     module_eval(&block)
   end
 
-  def configure!
+  def self.configure!
     load "Bakefile"
   end
 end
