@@ -41,7 +41,7 @@ module Bakery
 
       def create_item_file(item)
         if item.data.published        
-          say_status "compile", "#{item.path} -> #{item.template_path}", :cyan
+          say_status "compile", "#{item.path} -> #{item.template.path}", :cyan
           output_content = item.output!
 
           if item.output_error

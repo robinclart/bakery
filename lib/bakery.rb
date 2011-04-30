@@ -16,6 +16,7 @@ module Bakery
   autoload :VERSION,    "bakery/version"
 
   autoload :Item,       "bakery/item"
+  autoload :Template,   "bakery/template"
   autoload :Context,    "bakery/context"
   autoload :Snippet,    "bakery/snippet"
   

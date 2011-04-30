@@ -57,25 +57,4 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
     assert @page.send(:markdown?)
     refute @post.send(:markdown?)
   end
-
-  def test_template_path
-    assert_equal "templates/index.html.erb", @page.template_path
-  end
-
-  def test_template_basename
-    assert_equal "index.html", @page.template_basename
-  end
-
-  def test_base_template_name
-    assert_equal "test.html", @page.send(:base_template_name)
-  end
-
-  def test_model_template_name
-    assert_equal "page.html", @page.send(:model_template_name)
-    assert_equal "post.html", @post.send(:model_template_name)
-  end
-
-  def test_base_template_name_when_index_html
-    assert_nil Bakery::Item.new("pages/index.html.md").send(:base_template_name)
-  end
 end
