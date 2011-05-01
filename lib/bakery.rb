@@ -1,7 +1,6 @@
 $:.unshift File.expand_path("../../lib", __FILE__)
 
 # stdlib
-require 'pathname'
 require 'date'
 require 'time'
 require 'yaml'
