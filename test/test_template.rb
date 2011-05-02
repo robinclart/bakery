@@ -17,9 +17,9 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
     assert_equal "index.html", @page.template.basename
   end
 
-  def test_from_modelname
-    assert_equal "page.html", @page.template.from_modelname
-    assert_equal "post.html", @post.template.from_modelname
+  def test_from_model
+    assert_equal "page.html", @page.template.from_model
+    assert_equal "post.html", @post.template.from_model
   end
 
   def test_from_basename

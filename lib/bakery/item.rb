@@ -6,13 +6,13 @@ module Bakery
       @sub_directory  = @path.dirname.relative_path_from(@base_directory)
       @basename       = @path.basename(".md")
       @extname        = @basename.extname
-      @modelname      = base_directory.singularize
+      @model          = base_directory.singularize
       @output_error   = false
 
       mix_helpers!
     end
 
-    attr_reader :extname, :modelname, :output_error
+    attr_reader :extname, :model, :output_error
 
     def pathname
       @path
@@ -64,7 +64,7 @@ module Bakery
     #
     # This will give: "public/posts/john-doe/2011/4/29".
     def output_directory
-      directory = Bakery.config.output_directories[modelname.intern] || ":base"
+      directory = Bakery.config.output_directories[model.intern] || ":base"
       Pathname.new("public").join(interpolate_path(directory)).cleanpath.to_s
     end
 

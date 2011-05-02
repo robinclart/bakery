@@ -18,8 +18,8 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
     assert_equal ".html", @post.extname
   end
 
-  def test_modelname
-    assert_equal "page", @page.modelname
+  def test_model
+    assert_equal "page", @page.model
   end
 
   def test_output_path

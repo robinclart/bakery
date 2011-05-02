@@ -30,16 +30,16 @@ module Bakery
   # template with the name of the item's model
   class Template
     def initialize(item, fallback = "index")
-      @fallback       = [fallback, item.extname].join
-      @from_modelname = [item.modelname, item.extname].join
-      @from_basename  = item.basename unless item.basename == @fallback
-      @from_data      = item.data.template
-      @path           = Pathname.new(resolve_path(basename))
+      @fallback      = [fallback, item.extname].join
+      @from_model    = [item.model, item.extname].join
+      @from_basename = item.basename unless item.basename == @fallback
+      @from_data     = item.data.template
+      @path          = Pathname.new(resolve_path(basename))
     end
 
     ERROR = File.expand_path("../templates/error.html.erb", __FILE__)
 
-    attr_reader :fallback, :from_modelname, :from_basename, :from_data
+    attr_reader :fallback, :from_model, :from_basename, :from_data
 
     # Returns the content of the item's template.
     def content
@@ -66,7 +66,7 @@ module Bakery
     # Returns an array of all the suitable template names (without the ".erb"
     # extension) for the current item except the fallback one.
     def hypothetical_names
-      [from_data, from_basename, from_modelname].compact
+      [from_data, from_basename, from_model].compact
     end
 
     private
