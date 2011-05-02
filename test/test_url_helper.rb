@@ -15,6 +15,16 @@ class Bakery::TestDataHelper < MiniTest::Unit::TestCase
     assert "<a href=\"http://example.com/test.html\">Test</a>",
       @page.context.link("Test")
   end
+
+  def test_link_ending_with_index_htm
+    page = Bakery::Item.new("pages/index.htm.md")
+    assert "<a href=\"http://example.com/\">Test</a>", page.context.link("Test")
+  end
+
+  def test_link_ending_with_index_html
+    page = Bakery::Item.new("pages/index.html.md")
+    assert "<a href=\"http://example.com/\">Test</a>", page.context.link("Test")
+  end
   
   def test_link_with_options
     assert "<a href=\"http://example.com/test.html\" rel=\"nofollow\">Test</a>",
