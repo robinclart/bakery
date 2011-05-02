@@ -15,7 +15,7 @@ module Bakery
     private
 
     def resolve_path(name)
-      File.join("templates", "_#{name}.erb")
+      File.join(Template::DIRECTORY, "_#{name}.erb")
     end
   end
 end
