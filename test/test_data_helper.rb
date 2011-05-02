@@ -15,7 +15,7 @@ class Bakery::TestDataHelper < MiniTest::Unit::TestCase
   def test_data_helper_methods
     assert_equal @page.data.title, @page.context.title
     assert_equal @page.data.author, @page.context.author
-    assert_equal @page.data.email, @page.context.email
+    assert_nil @page.data.category
   end
 
   def test_published_at

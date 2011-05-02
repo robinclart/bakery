@@ -6,6 +6,7 @@ require 'date'
 require 'time'
 require 'yaml'
 require 'ostruct'
+require 'forwardable'
 require 'erb'
 
 # 3rd party libraries
