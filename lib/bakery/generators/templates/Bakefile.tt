@@ -8,7 +8,7 @@ Bakery.configure do
 
   # config.models += ["post"]
 
-  # config.output_directories.merge!({
+  # config.output_paths.merge!({
   #   :post => "public/blog"
   # })
 

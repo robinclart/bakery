@@ -39,18 +39,19 @@ module Bakery
       @sub_directory.to_s
     end
 
-    # Returns the output directory of an item.
+    # Returns the output path of an item.
     #
     # By default the items from the "page" model will be rendered at
     # the root of the public directory. All the other models that you have
-    # supplied in your Bakefile will be rendered in "public/:base_directory"
+    # supplied in your Bakefile will be rendered in ":base/:sub/:name"
     #
-    # If the output directory have been overwritten in the Bakefile the path
+    # If the output path have been overwritten in the Bakefile the path
     # will be interpolated and every keywords found (a string beginning by a
     # colon) found will be:
     #
-    # - replaced by the value of the base directory (for the :base and
-    #   the :base_directory keywords).
+    # - replaced by the value of the base directory (for the :base keywords).
+    # - replaced by the value of the sub directory (for the :sub keywords).
+    # - replaced by the value of the filename directory (for the :name keywords).
     # - replaced by the value of the day, month, year of the published_at
     #   field if it is present in the YAML Front Matter (for the :day, :month
     #   and :year keywords).
@@ -59,19 +60,24 @@ module Bakery
     #
     # Example of interpolation configuration one can found in a Bakefile:
     #
-    #   config.output_directories.merge!({
-    #     :post => ":base/:author/:year/:month/:day"
+    #   config.output_paths.merge!({
+    #     :post => ":base/:author/:year/:month/:day/:name"
     #   })
     #
-    # This will give: "public/posts/john-doe/2011/4/29".
-    def output_directory
-      directory = Bakery.config.output_directories[model.intern] || ":base"
-      Pathname.new("public").join(interpolate_path(directory)).cleanpath.to_s
-    end
-
-    # Returns the output path.
-    def output_path
-      @path.sub(/.md$/, "").sub(base_directory, output_directory).to_s
+    # This will give: "public/posts/john-doe/2011/4/29/hello-world.html".
+    #
+    # or for this:
+    #
+    #   config.output_paths.merge!({
+    #     :post => ":base/:author/:year/:month/:day/:name/index"
+    #   })
+    #
+    # This will give: "public/posts/john-doe/2011/4/29/hello-world/index.html".
+    #
+    # Note that the extension are automatically appended to the path.
+    def output_path(default = ":base/:sub/:name")
+      p = Bakery.config.output_paths[model.intern] || default
+      Pathname.new("public").join(interpolate_path(p) + extname).cleanpath.to_s
     end
 
     # Compiles the item into its template.
