@@ -9,7 +9,7 @@ module Bakery
     end
 
     def content
-      @content ||= @path.read(path)
+      @content ||= @path.read
     end
 
     private
