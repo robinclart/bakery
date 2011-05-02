@@ -13,7 +13,7 @@ module Bakery
       end
 
       def create_public_directory
-        empty_directory "public"
+        empty_directory Bakery::Item::PUBLIC_DIRECTORY.to_s
       end
 
       def compile

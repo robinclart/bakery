@@ -13,8 +13,8 @@ module Bakery
       end
 
       def create_index_template
-        empty_directory "templates"
-        template "template.tt", "templates/#{name}.html.erb"
+        empty_directory Bakery::Template::DIRECTORY.to_s
+        template "template.tt", "#{Bakery::Template::DIRECTORY}/#{name}.html.erb"
       end
     end
   end

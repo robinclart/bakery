@@ -11,7 +11,8 @@ module Bakery
       end
 
       def url
-        item.output_path.gsub("public/", Bakery.config.root_url).gsub("index.html", "")
+        item.output_path.gsub("#{Bakery::Item::PUBLIC_DIRECTORY}/",
+          Bakery.config.root_url).gsub("index.html", "")
       end
     end
   end
