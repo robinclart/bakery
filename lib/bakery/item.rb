@@ -117,6 +117,10 @@ module Bakery
       @html ||= markdown? ? Redcarpet.new(content).to_html : content
     end
 
+    def markdown?
+      @path.extname == ".md"
+    end
+
     # Returns a freezed OpenStruct loaded with all the data present in the
     # YAML Front Matter.
     def data
@@ -165,10 +169,6 @@ module Bakery
 
     def date_chunk(m) #:nodoc:
       Date.parse(data.published_at).send(m).to_s if data.published_at
-    end
-
-    def markdown? #:nodoc:
-      @path.extname == ".md"
     end
   end
 end

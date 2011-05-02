@@ -67,7 +67,7 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
   end
 
   def test_if_item_need_markdown_processing
-    assert @page.send(:markdown?)
-    refute @post.send(:markdown?)
+    assert @page.markdown?
+    refute @post.markdown?
   end
 end
