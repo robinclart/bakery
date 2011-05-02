@@ -4,15 +4,16 @@ module Bakery
       @path           = Pathname.new(path).cleanpath
       @base_directory = @path.sub(/#{File::SEPARATOR}.*$/, "")
       @sub_directory  = @path.dirname.relative_path_from(@base_directory)
-      @basename       = @path.basename(".md")
-      @extname        = @basename.extname
+      @filename       = @path.basename(".md")
+      @extname        = @filename.extname
+      @basename       = @filename.basename(@extname).to_s
       @model          = base_directory.singularize
       @output_error   = false
 
       mix_helpers!
     end
 
-    attr_reader :extname, :model, :output_error
+    attr_reader :extname, :basename, :model, :output_error
 
     def pathname
       @path
@@ -22,9 +23,9 @@ module Bakery
       @path.to_s
     end
 
-    # Returns the basename of the item's file without the ".md" if it's present.
-    def basename
-      @basename.to_s
+    # Returns the filename of the item's file without the ".md" if it's present.
+    def filename
+      @filename.to_s
     end
 
     # Returns the base directory of an item. The name of the directory is the

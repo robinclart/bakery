@@ -9,8 +9,12 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
     @post = Bakery::Item.new("posts/test.html")
   end
 
+  def test_filename
+    assert_equal "test.html", @page.filename
+  end
+
   def test_basename
-    assert_equal "test.html", @page.basename
+    assert_equal "test", @page.basename
   end
 
   def test_extname
