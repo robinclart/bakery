@@ -12,12 +12,6 @@ Bakery.configure do
   #   :post => "blog/:base/:sub/:name"
   # })
 
-  # config.sync = {
-  #   :user => 'www',
-  #   :host => 'example.com',
-  #   :remote_path => '/var/www/example.com/'
-  # }
-
   # config.helpers += []
 
 end

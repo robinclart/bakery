@@ -29,7 +29,6 @@ module Bakery
       :output_paths => {
         :page => ":sub/:name"
       },
-      :sync => {},
       :helpers => [Helpers::Data, Helpers::Url]
     })
   end
