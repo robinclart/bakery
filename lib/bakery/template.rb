@@ -37,7 +37,7 @@ module Bakery
       @path          = Pathname.new(resolve_path(filename))
     end
 
-    ERROR = File.expand_path("../templates/error.html.erb", __FILE__)
+    ERROR = Pathname.new("../templates/error.html.erb").expand_path(__FILE__)
     DIRECTORY = Pathname.new("templates")
 
     attr_reader :fallback, :from_model, :from_filename, :from_data

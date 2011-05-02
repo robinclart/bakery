@@ -88,7 +88,7 @@ module Bakery
       context.render(template.content) { to_html }
     rescue => e
       @output_error = e
-      ERB.new(File.read(Template::ERROR)).result(binding)
+      ERB.new(Template::ERROR.read).result(binding)
     end
 
     # Returns an instance of Template that holds all the information about the
