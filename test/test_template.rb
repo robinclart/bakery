@@ -30,6 +30,11 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
     assert_equal "special.html", @page.template.from_data
   end
 
+  def test_hypothetical_names
+    assert_equal ["special.html", "test.html", "page.html"], @page.template.hypothetical_names
+    assert_equal ["special.html", "test.html", "post.html"], @post.template.hypothetical_names
+  end
+
   def test_from_filename_when_index
     assert_nil Bakery::Item.new("pages/index.htm").template.from_filename
     assert_nil Bakery::Item.new("pages/index.html").template.from_filename
