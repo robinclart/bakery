@@ -45,6 +45,11 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
     assert_equal "pages", @page.base_directory
   end
 
+  def test_sub_directory
+    page = Bakery::Item.new("pages/sub/directory/test.html.md")
+    assert_equal "sub/directory", page.sub_directory
+  end
+
   def test_output_directory
     assert_equal "public", @page.output_directory
     assert_equal "public/blog/posts/john-doe/2011/4/29", @post.output_directory

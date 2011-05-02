@@ -34,6 +34,7 @@ module Bakery
       @from_modelname = [item.modelname, item.extname].join
       @from_basename  = item.basename unless item.basename == @fallback
       @from_data      = item.data.template
+      @path           = Pathname.new(resolve_path(basename))
     end
 
     ERROR = File.expand_path("../templates/error.html.erb", __FILE__)
@@ -42,12 +43,12 @@ module Bakery
 
     # Returns the content of the item's template.
     def content
-      @content ||= File.read(path)
+      @content ||= path.read
     end
 
     # Returns the template path for the current item.
     def path
-      @path ||= resolve_path(basename)
+      @path.to_s
     end
 
     # Returns the basename of the item's template (without the ".erb"
@@ -55,8 +56,6 @@ module Bakery
     def basename
       available_names.first or fallback
     end
-
-    private
 
     # Returns an array of all the availables template names (without the
     # ".erb" extension) for the current item except the fallback one.
@@ -69,6 +68,8 @@ module Bakery
     def hypothetical_names
       [from_data, from_basename, from_modelname].compact
     end
+
+    private
 
     def resolve_path(name) #:nodoc:
       File.join("templates", "#{name}.erb")

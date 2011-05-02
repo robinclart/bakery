@@ -1,34 +1,41 @@
 module Bakery
   class Item
     def initialize(path)
-      @path = path
-      @output_error = false
+      @path           = Pathname.new(path).cleanpath
+      @base_directory = @path.sub(/#{File::SEPARATOR}.*$/, "")
+      @sub_directory  = @path.dirname.relative_path_from(@base_directory)
+      @basename       = @path.basename(".md")
+      @extname        = @basename.extname
+      @modelname      = base_directory.singularize
+      @output_error   = false
 
       mix_helpers!
     end
 
-    attr_reader :path, :output_error
+    attr_reader :extname, :modelname, :output_error
+
+    def pathname
+      @path
+    end
+
+    def path
+      @path.to_s
+    end
 
     # Returns the basename of the item's file without the ".md" if it's present.
     def basename
-      @basename ||= File.basename(path, ".md")
-    end
-
-    # Returns the extension of the item's basename.
-    def extname
-      @extname ||= File.extname(basename)
-    end
-
-    # Return the item's model.
-    def modelname
-      @modelname ||= base_directory.singularize
+      @basename.to_s
     end
 
     # Returns the base directory of an item. The name of the directory is the
     # pluralized version of the model name for a given item. For example a
     # post item will return "posts".
     def base_directory
-      @base_directory ||= path.split(File::SEPARATOR).first
+      @base_directory.to_s
+    end
+
+    def sub_directory
+      @sub_directory.to_s
     end
 
     # Returns the output directory of an item.
@@ -57,13 +64,13 @@ module Bakery
     #
     # This will give: "public/posts/john-doe/2011/4/29".
     def output_directory
-      dir = Bakery.config.output_directories[modelname.intern] || ":base"
-      interpolate_output_directory(dir)
+      directory = Bakery.config.output_directories[modelname.intern] || ":base"
+      Pathname.new("public").join(interpolate_path(directory)).cleanpath.to_s
     end
 
     # Returns the output path.
     def output_path
-      @path.gsub(base_directory, output_directory).gsub(/.md$/, "")
+      @path.sub(/.md$/, "").sub(base_directory, output_directory).to_s
     end
 
     # Compiles the item into its template.
@@ -88,7 +95,7 @@ module Bakery
 
     # Returns the raw content from the item's file.
     def raw
-      @raw ||= File.read(path)
+      @raw ||= @path.read
     end
 
     # Returns all the content under the YAML Front Matter stil unprocessed.
@@ -120,8 +127,9 @@ module Bakery
     end
 
     def self.list(model = nil)
-      model = model ? model.pluralize : Bakery.config.models.map(&:pluralize).join(",")
-      Dir[File.join("{#{model}}", "**", "*.*")]
+      models = model ? [model] : Bakery.config.models
+      models = "{" + models.map(&:pluralize).join(",") + "}"
+      Dir[File.join(models, "**", "*.*")]
     end
 
     private
@@ -132,25 +140,20 @@ module Bakery
       Bakery.config.helpers.each { |h| context.extend h }
     end
 
-    def interpolate_output_directory(dir) #:nodoc:
-      sections = dir.split(File::SEPARATOR).map do |section|
-        if section.eql?(":base")
-          base_directory
-        elsif section.match(/^:(year|month|day)$/)
-          date_chunk $1
-        elsif section.match(/^:(.*)$/)
-          data_chunk $1
-        else
-          section
+    def interpolate_path(p, pattern = %r/:[a-z_]+/) #:nodoc:
+      p.gsub(pattern) do |meth|
+        case meth
+          when ":base" then base_directory
+          when ":sub"  then sub_directory
+          when ":name" then basename
+          else data_chunk(meth.sub(/:/, ""))
         end
       end
-
-      File.join *sections.compact.unshift("public")
     end
 
     def data_chunk(m) #:nodoc:
-      data_value = data.send(m)
-      data_value.parameterize if data_value
+      return date_chunk(m) if m.match(/day|month|year/)
+      return data.send(m).parameterize if data.send(m)
     end
 
     def date_chunk(m) #:nodoc:
@@ -158,7 +161,7 @@ module Bakery
     end
 
     def markdown? #:nodoc:
-      !!path.match(/.md$/)
+      @path.extname == ".md"
     end
   end
 end
