@@ -54,18 +54,18 @@ module Bakery
     # Returns the basename of the item's template (without the ".erb"
     # extension).
     def filename
-      available_names.first or fallback
+      available_filenames.first or fallback
     end
 
     # Returns an array of all the availables template names (without the
     # ".erb" extension) for the current item except the fallback one.
-    def available_names
-      hypothetical_names.select { |name| File.exists? resolve_path(name) }
+    def available_filenames
+      hypothetical_filenames.select { |name| File.exists? resolve_path(name) }
     end
 
     # Returns an array of all the suitable template names (without the ".erb"
     # extension) for the current item except the fallback one.
-    def hypothetical_names
+    def hypothetical_filenames
       [from_data, from_filename, from_model].compact
     end
 
