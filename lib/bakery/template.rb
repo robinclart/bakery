@@ -47,6 +47,10 @@ module Bakery
       @content ||= @path.read
     end
 
+    def pathname
+      @path
+    end
+
     # Returns the template path for the current item.
     def path
       @path.to_s
