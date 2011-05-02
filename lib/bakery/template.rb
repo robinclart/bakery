@@ -43,7 +43,7 @@ module Bakery
 
     # Returns the content of the item's template.
     def content
-      @content ||= path.read
+      @content ||= @path.read
     end
 
     # Returns the template path for the current item.
