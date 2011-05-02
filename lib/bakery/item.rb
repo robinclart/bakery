@@ -13,6 +13,7 @@ module Bakery
       mix_helpers!
     end
 
+    OUTPUT_PATH = ":base/:sub/:name"
     PUBLIC_DIRECTORY = Pathname.new("public")
 
     attr_reader :extname, :basename, :model, :output_error
@@ -77,8 +78,8 @@ module Bakery
     # This will give: "public/posts/john-doe/2011/4/29/hello-world/index.html".
     #
     # Note that the extension are automatically appended to the path.
-    def output_path(default = ":base/:sub/:name")
-      p = Bakery.config.output_paths[model.intern] || default
+    def output_path
+      p = Bakery.config.output_paths[model.intern] || OUTPUT_PATH
       PUBLIC_DIRECTORY.join(interpolate_path(p) + extname).cleanpath.to_s
     end
 
