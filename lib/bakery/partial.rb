@@ -1,13 +1,21 @@
 module Bakery
   class Partial
-    attr_reader :path
-
     def initialize(name)
-      @path = File.join("templates", "_#{name}.erb")
+      @path = Pathname.new(resolve_path(name))
+    end
+
+    def path
+      @path.to_s
     end
 
     def content
-      @content ||= File.read(path)
+      @content ||= @path.read(path)
+    end
+
+    private
+
+    def resolve_path(name)
+      File.join("templates", "_#{name}.erb")
     end
   end
 end
