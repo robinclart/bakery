@@ -79,7 +79,7 @@ module Bakery
     #
     # Note that the extension are automatically appended to the path.
     def output_path
-      p = Bakery.config.output_paths[model.intern] || OUTPUT_PATH
+      p = data.path || Bakery.config.output_paths[model.intern] || OUTPUT_PATH
       PUBLIC_DIRECTORY.join(interpolate_path(p) + extname).cleanpath.to_s
     end
 

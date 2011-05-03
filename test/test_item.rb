@@ -37,6 +37,12 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
     assert_equal "public/sub/test.html", page.output_path
   end
 
+  def test_output_path_with_data_path
+    page = Bakery::Item.new("pages/test.html.md")
+    def page.raw ; "---\npath: special/path/index\n---\n" ; end
+    assert_equal "public/special/path/index.html", page.output_path
+  end
+
   def test_template
     assert_equal Bakery::Template, @page.template.class
   end
