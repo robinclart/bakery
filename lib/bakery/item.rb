@@ -166,7 +166,7 @@ module Bakery
     end
 
     def data_chunk(m) #:nodoc:
-      return date_chunk(m) if m.match(/day|month|year/)
+      return date_chunk(m) if m.match(/^day|month|year$/)
       return data.send(m).parameterize if data.send(m)
     end
 
