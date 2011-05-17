@@ -79,8 +79,8 @@ module Bakery
     #
     # Note that the extension are automatically appended to the path.
     def output_path
-      p = data.path || Bakery.config.output_paths[model.intern] || OUTPUT_PATH
-      PUBLIC_DIRECTORY.join(interpolate_path(p) + extname).cleanpath.to_s
+      p = data.path || Bakery.config.output_paths[@model.intern] || OUTPUT_PATH
+      PUBLIC_DIRECTORY.join(interpolate_path(p) + @extname).cleanpath.to_s
     end
 
     # Compiles the item into its template.
@@ -117,7 +117,7 @@ module Bakery
     # Depending if the file path ends with ".md" or not the content will be
     # processed through <tt>Redcarpet</tt> or not.
     def to_html
-      @html ||= markdown? ? Redcarpet.new(content).to_html : content
+      @html ||= markdown? ? context.markdown(content) : content
     end
 
     def markdown?
@@ -159,7 +159,7 @@ module Bakery
         case meth
           when ":base" then base_directory
           when ":sub"  then sub_directory
-          when ":name" then basename
+          when ":name" then @basename
           else data_chunk(meth.sub(/:/, ""))
         end
       end
