@@ -5,7 +5,7 @@ require 'minitest/autorun'
 
 class Bakery::TestDataHelper < MiniTest::Unit::TestCase
   def setup
-    @page = Bakery::Item.new("pages/test.html.md")
+    @page = Bakery::Item.new("site/page.html.md")
   end
 
   def test_data

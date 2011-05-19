@@ -5,16 +5,16 @@ require 'minitest/autorun'
 
 class Bakery::TestItem < MiniTest::Unit::TestCase
   def setup
-    @page = Bakery::Item.new("pages/test.html.md")
-    @post = Bakery::Item.new("posts/test.html")
+    @page = Bakery::Item.new("site/page.html.md")
+    @post = Bakery::Item.new("site/post.html")
   end
 
   def test_filename
-    assert_equal "test.html", @page.filename
+    assert_equal "page.html", @page.filename
   end
 
   def test_basename
-    assert_equal "test", @page.basename
+    assert_equal "page", @page.basename
   end
 
   def test_extname
@@ -27,19 +27,17 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
   end
 
   def test_output_path
-    assert_equal "public/test.html", @page.output_path
-    assert_equal "public/blog/posts/john-doe/2011/4/29/test.html", @post.output_path
-    assert_equal "public/articles/test/index.html", Bakery::Item.new("articles/test.html.md").output_path
+    assert_equal "public/page.html", @page.output_path
+    assert_equal "public/blog/post/john-doe/2011/4/29/post.html", @post.output_path
   end
 
   def test_output_path_in_subdirectory
-    page = Bakery::Item.new("pages/sub/test.html.md")
-    assert_equal "public/sub/test.html", page.output_path
+    page = Bakery::Item.new("site/sub/index.html.md")
+    assert_equal "public/sub/index.html", page.output_path
   end
 
   def test_output_path_with_data_path
-    page = Bakery::Item.new("pages/test.html.md")
-    def page.raw ; "---\npath: special/path/index\n---\n" ; end
+    page = Bakery::Item.new("site/data_path.html.md")
     assert_equal "public/special/path/index.html", page.output_path
   end
 
@@ -52,17 +50,9 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
     assert_equal @page, @page.context.item
   end
 
-  def test_base_directory
-    assert_equal "pages", @page.base_directory
-  end
-
-  def test_sub_directory
-    page = Bakery::Item.new("pages/sub/directory/test.html.md")
-    assert_equal "sub/directory", page.sub_directory
-  end
-
   def test_content
-    content = "# Test\n\nHere comes some content"
+    content = "# Test\n\nHere comes some content\n"
+    assert_equal content, @page.content
   end
 
   def test_data

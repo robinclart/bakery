@@ -1,5 +1,6 @@
 ---
 title: <%= title %>
+model: <%= model %>
 published: true
 published_at: <%= Date.today.strftime("%d %b %Y") %>
 

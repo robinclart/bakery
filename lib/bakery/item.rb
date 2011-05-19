@@ -2,21 +2,20 @@ module Bakery
   class Item
     def initialize(path)
       @path           = Pathname.new(path).cleanpath
-      @base_directory = @path.sub(/#{File::SEPARATOR}.*$/, "")
-      @sub_directory  = @path.dirname.relative_path_from(@base_directory)
+      @dirname        = @path.relative_path_from(DIRECTORY).dirname
       @filename       = @path.basename(".md")
       @extname        = @filename.extname
       @basename       = @filename.basename(@extname).to_s
-      @model          = base_directory.singularize
       @output_error   = false
 
       mix_helpers!
     end
 
-    OUTPUT_PATH = ":base/:sub/:name"
+    DIRECTORY = Pathname.new("site")
     PUBLIC_DIRECTORY = Pathname.new("public")
+    OUTPUT_PATH = ":dirname/:filename"
 
-    attr_reader :extname, :basename, :model, :output_error
+    attr_reader :extname, :basename, :output_error
 
     def pathname
       @path
@@ -26,20 +25,17 @@ module Bakery
       @path.to_s
     end
 
+    def model
+      data.model || "page"
+    end
+
     # Returns the filename of the item's file without the ".md" if it's present.
     def filename
       @filename.to_s
     end
 
-    # Returns the base directory of an item. The name of the directory is the
-    # pluralized version of the model name for a given item. For example a
-    # post item will return "posts".
-    def base_directory
-      @base_directory.to_s
-    end
-
-    def sub_directory
-      @sub_directory.to_s
+    def dirname
+      @dirname.to_s
     end
 
     # Returns the output path of an item.
@@ -79,7 +75,7 @@ module Bakery
     #
     # Note that the extension are automatically appended to the path.
     def output_path
-      p = data.path || Bakery.config.output_paths[@model.intern] || OUTPUT_PATH
+      p = data.path || Bakery.config.output_paths[model.intern] || OUTPUT_PATH
       PUBLIC_DIRECTORY.join(interpolate_path(p) + @extname).cleanpath.to_s
     end
 
@@ -131,19 +127,17 @@ module Bakery
     end
 
     def self.where(conditions = {})
-      all(conditions.delete(:model)).select do |item|
+      all.select do |item|
         conditions.all? { |k,v| item.data.send(k) == v }
       end
     end
 
-    def self.all(model = nil)
-      list(model).map { |p| self.new(p) }
+    def self.all
+      list.map { |p| self.new(p) }
     end
 
-    def self.list(model = nil)
-      models = model ? [model] : Bakery.config.models
-      models = "{" + models.map(&:pluralize).join(",") + "}"
-      Dir[File.join(models, "**", "*.*")]
+    def self.list
+      Dir.glob DIRECTORY.join("**", "*.*").to_s
     end
 
     private
@@ -157,9 +151,8 @@ module Bakery
     def interpolate_path(p, pattern = %r/:[a-z_]+/) #:nodoc:
       p.gsub(pattern) do |meth|
         case meth
-          when ":base" then base_directory
-          when ":sub"  then sub_directory
-          when ":name" then @basename
+          when ":dirname"  then dirname
+          when ":filename" then basename
           else data_chunk(meth.sub(/:/, ""))
         end
       end

@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
   s.rubyforge_project         = "bakery"
 
   s.add_dependency "activesupport", ">= 3.0.0"
+  s.add_dependency "i18n", ">= 0.5.0"
   s.add_dependency "redcarpet", ">= 1.11.3"
   s.add_dependency "thor", ">= 0.14.6"
 

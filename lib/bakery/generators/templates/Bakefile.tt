@@ -9,7 +9,7 @@ Bakery.configure do
   # config.models += ["post"]
 
   # config.output_paths.merge!({
-  #   :post => "blog/:base/:sub/:name"
+  #   :post => "blog/:dirname/:filename"
   # })
 
   # config.helpers += []

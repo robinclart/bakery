@@ -29,10 +29,9 @@ module Bakery
       end
 
       def compile_a_single_item
-        item_model = path.split(File::SEPARATOR).first.singularize
+        item = Bakery::Item.new(path)
 
-        if Bakery.config.models.include?(item_model)
-          item = Bakery::Item.new(path)
+        if Bakery.config.models.include?(item.model)
           create_item_file item
         else
           say "Add #{item_model} to your 'config.models' (see Bakefile)", :red

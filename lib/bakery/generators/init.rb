@@ -17,7 +17,7 @@ module Bakery
 
       def create_index_template
         empty_directory Bakery::Template::DIRECTORY.to_s
-        template "template.tt", "#{Bakery::Template::DIRECTORY}/index.html.erb"
+        template "template.tt", Bakery::Template::DIRECTORY.join("index.html.erb").to_s
       end
     end
   end

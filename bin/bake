@@ -6,7 +6,7 @@ require 'bakery/generators'
 
 # Invoke the compile command if there is no arguments or if the first argument
 # match --force or match -f or match an existing file.
-if ARGV.empty? || ARGV.first.match(/^-f|--force$/) || File.exist?(ARGV.first)
+if ARGV.empty? or ARGV.first.match(/^-f|--force$/) or File.exist?(ARGV.first)
   ARGV.unshift "compile"
 end
 
@@ -15,8 +15,24 @@ if !!ARGV.first.match(/^-v|--version$/)
   exit
 end
 
-if File.exist?('Bakefile') || ARGV.first.eql?("init")
-  Bakery::Generators.invoke ARGV.shift
+if !!ARGV.first.match(/^-h|--help|help$/) and ARGV[1].nil?
+  puts "help"
+  exit
+end
+
+begin
+  command = !!ARGV.first.match(/^-h|--help|help$/) ? ARGV[1] : ARGV[0]
+  generator = Bakery::Generators.const_get(command.camelize)
+rescue NameError
+  puts "invalid command"
+  exit
+end
+
+if ARGV.first.eql?("help")
+  generator.help Thor::Base.shell.new
+elsif File.exist?('Bakefile') || ARGV.first.eql?("init")
+  ARGV.shift
+  generator.start
 else
   puts "This is not a bakery. Please run 'bake init' first."
 end

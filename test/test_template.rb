@@ -5,8 +5,8 @@ require 'minitest/autorun'
 
 class Bakery::TestItem < MiniTest::Unit::TestCase
   def setup
-    @page = Bakery::Item.new("pages/test.html.md")
-    @post = Bakery::Item.new("posts/test.html")
+    @page = Bakery::Item.new("site/page.html.md")
+    @post = Bakery::Item.new("site/post.html")
   end
 
   def test_path
@@ -23,7 +23,7 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
   end
 
   def test_from_filename
-    assert_equal "test.html", @page.template.from_filename
+    assert_equal "page.html", @page.template.from_filename
   end
 
   def test_from_data
@@ -31,13 +31,13 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
   end
 
   def test_hypothetical_filenames
-    assert_equal ["special.html", "test.html", "page.html"], @page.template.hypothetical_filenames
-    assert_equal ["special.html", "test.html", "post.html"], @post.template.hypothetical_filenames
+    assert_equal ["special.html", "page.html", "page.html"], @page.template.hypothetical_filenames
+    assert_equal ["special.html", "post.html", "post.html"], @post.template.hypothetical_filenames
   end
 
   def test_from_filename_when_index
-    assert_nil Bakery::Item.new("pages/index.htm").template.from_filename
-    assert_nil Bakery::Item.new("pages/index.html").template.from_filename
-    assert_nil Bakery::Item.new("pages/index.html.md").template.from_filename
+    assert_nil Bakery::Item.new("site/sub/index.htm").template.from_filename
+    assert_nil Bakery::Item.new("site/sub/index.html").template.from_filename
+    assert_nil Bakery::Item.new("site/sub/index.html.md").template.from_filename
   end
 end

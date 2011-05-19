@@ -26,9 +26,7 @@ module Bakery
     @@config ||= OpenStruct.new({
       :root_url => "/",
       :models => ["page"],
-      :output_paths => {
-        :page => ":sub/:name"
-      },
+      :output_paths => {},
       :helpers => [Helpers::Data, Helpers::Url]
     })
   end

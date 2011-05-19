@@ -1,10 +1,10 @@
 module Bakery
   module Generators
-    class Item < Thor::Group
+    class New < Thor::Group
       include Thor::Actions
 
-      namespace :item
-      desc "Create a new item."
+      namespace :new
+      desc "Create a new page."
       argument :model
       argument :title
       class_option :directory, :optional => true, :default => "", :aliases => ["-d"]
@@ -19,10 +19,15 @@ module Bakery
         Bakery.configure!
       end
 
-      def create_item
+      def create_item_directory
+        empty_directory Bakery::Item::DIRECTORY.to_s
+      end
+
+      def create_item_file
         if Bakery.config.models.include?(model)
-          empty_directory model.pluralize
-          template "item.tt", File.join(model.pluralize, options[:directory], "#{title.parameterize}#{options[:extension]}")
+          item_filename = title.parameterize + options[:extension]
+          item_path = Bakery::Item::DIRECTORY.join(options[:directory], item_filename)
+          template "item.tt", item_path.to_s
         else
           say "Add #{model} to your 'config.models' (see Bakefile)", :red
         end
