@@ -5,10 +5,6 @@ module Bakery
       desc "Initialize a new bakery repository"
       class_option :force, :optional => true, :default => false, :aliases => ["-f"]
 
-      def self.source_root
-        File.expand_path("../templates/", __FILE__)
-      end
-
       def create_bakefile
         template "Bakefile.tt", "Bakefile"
       end

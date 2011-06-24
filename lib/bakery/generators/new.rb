@@ -9,10 +9,6 @@ module Bakery
       class_option :extension, :optional => true, :default => "html", :aliases => ["-e"]
       class_option :force, :optional => true, :default => false, :aliases => ["-f"]
 
-      def self.source_root
-        File.expand_path("../templates/", __FILE__)
-      end
-
       def create_a_file
         if model == "template"
           create_a_template
