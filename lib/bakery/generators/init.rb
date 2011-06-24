@@ -9,8 +9,11 @@ module Bakery
         template "Bakefile.tt", "Bakefile"
       end
 
-      def create_index_template
+      def create_template_directory
         empty_directory Bakery::Template::DIRECTORY.to_s
+      end
+
+      def create_default_template
         template "template.tt", Bakery::Template::DIRECTORY.join("index.html.erb").to_s
       end
     end
