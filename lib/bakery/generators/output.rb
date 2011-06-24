@@ -1,8 +1,8 @@
 module Bakery
   module Generators
-    class Compile < Base
-      namespace :compile
-      desc "Compile all items."
+    class Output < Base
+      namespace "output"
+      desc "Generate the output for all pages or for a specific one if the first arguent is a path."
       argument :path, :optional => true
       class_option :force, :optional => true, :default => false, :aliases => ["-f"]
 

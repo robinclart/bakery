@@ -19,6 +19,7 @@ module Bakery
   autoload :Partial,    "bakery/partial"
   autoload :Context,    "bakery/context"
   autoload :Helpers,    "bakery/helpers"
+  autoload :Commands,   "bakery/commands"
   autoload :Generators, "bakery/generators"
 
   def self.config

@@ -1,7 +1,7 @@
 module Bakery
   module Generators
     class Init < Base
-      namespace :init
+      namespace "init"
       desc "Initialize a new bakery repository"
       class_option :force, :optional => true, :default => false, :aliases => ["-f"]
 

@@ -2,31 +2,6 @@
 
 require 'bakery'
 
-# Invoke the compile command if there is no arguments or if the first argument
-# match --force or match -f or match an existing file.
-if ARGV.empty? or ARGV.first.match(/^-f|--force$/) or File.exist?(ARGV.first)
-  command = ARGV.unshift("compile").first
-else
-  command = ARGV.first.eql?("help") ? ARGV.shift : ARGV.first
-end
-
-begin
-  Bakery.load_config! unless command == "init"
-rescue LoadError
-  puts "This is not a bakery. Please run 'bake init' first."
-end
-
-begin
-  require "bakery/generators/#{command}"
-  generator = Bakery::Generators.const_get(ARGV.shift.camelize)
-
-  unless command == "help"
-    generator.start
-  else
-    generator.help Thor::Base.shell.new
-  end
-rescue NameError
-  puts "invalid command"
-end
+Bakery::Commands.run
 
 exit # bye
