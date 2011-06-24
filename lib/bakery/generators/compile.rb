@@ -1,8 +1,6 @@
 module Bakery
   module Generators
-    class Compile < Thor::Group
-      include Thor::Actions
-
+    class Compile < Base
       namespace :compile
       desc "Compile all items."
       argument :path, :optional => true

@@ -1,5 +1,9 @@
 require 'thor/group'
 
-%w[ init new compile ].each do |generator|
-  require "bakery/generators/#{generator}"
+module Bakery
+  module Generators
+    class Base < Thor::Group
+      include Thor::Actions
+    end
+  end
 end

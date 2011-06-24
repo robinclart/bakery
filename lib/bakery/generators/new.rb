@@ -1,8 +1,6 @@
 module Bakery
   module Generators
-    class New < Thor::Group
-      include Thor::Actions
-
+    class New < Base
       namespace :new
       desc "Create a new page."
       argument :model
