@@ -8,7 +8,7 @@ module Bakery
       argument :model
       argument :title
       class_option :directory, :optional => true, :default => "", :aliases => ["-d"]
-      class_option :extension, :optional => true, :default => ".html.md", :aliases => ["-e"]
+      class_option :extension, :optional => true, :default => "html", :aliases => ["-e"]
       class_option :force, :optional => true, :default => false, :aliases => ["-f"]
 
       def self.source_root
@@ -19,18 +19,40 @@ module Bakery
         Bakery.configure!
       end
 
-      def create_item_directory
-        empty_directory Bakery::Item::DIRECTORY.to_s
-      end
-
-      def create_item_file
-        if Bakery.config.models.include?(model)
-          item_filename = title.parameterize + options[:extension]
-          item_path = Bakery::Item::DIRECTORY.join(options[:directory], item_filename)
-          template "item.tt", item_path.to_s
+      def create_a_file
+        if model == "template"
+          create_a_template
+        elsif model == "partial"
+          create_a_partial
+        elsif Bakery.config.models.include?(model)
+          create_an_item
         else
           say "Add #{model} to your 'config.models' (see Bakefile)", :red
         end
+      end
+
+      private
+
+      def create_a_template
+        template_filename = title + "." + options[:extension] + ".erb"
+
+        empty_directory Bakery::Template::DIRECTORY.to_s
+        template "template.tt", Bakery::Template::DIRECTORY.join(template_filename).to_s
+      end
+
+      def create_a_partial
+        partial_filename = "_" + title + "." + options[:extension] + ".erb"
+
+        empty_directory Bakery::Template::DIRECTORY.to_s
+        create_file Bakery::Template::DIRECTORY.join(partial_filename).to_s
+      end
+
+      def create_an_item
+        item_filename = title.parameterize + "." + options[:extension] + ".md"
+        item_path = Bakery::Item::DIRECTORY.join(options[:directory], item_filename).to_s
+
+        empty_directory Bakery::Item::DIRECTORY.to_s
+        template "item.tt", item_path
       end
     end
   end
