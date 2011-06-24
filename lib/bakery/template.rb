@@ -34,7 +34,6 @@ module Bakery
       @from_model    = [item.model, item.extname].join
       @from_filename = item.filename unless item.filename == @fallback
       @from_data     = item.data.template
-      @path          = Pathname.new(resolve_path(filename))
     end
 
     ERROR = Pathname.new("../templates/error.html.erb").expand_path(__FILE__)
@@ -44,16 +43,16 @@ module Bakery
 
     # Returns the content of the item's template.
     def content
-      @content ||= @path.read
+      @content ||= pathname.read
     end
 
     def pathname
-      @path
+      @path ||= Pathname.new(resolve_path(filename))
     end
 
     # Returns the template path for the current item.
     def path
-      @path.to_s
+      pathname.to_s
     end
 
     # Returns the basename of the item's template (without the ".erb"
