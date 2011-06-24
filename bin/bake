@@ -21,10 +21,10 @@ begin
   else
     generator.start
   end
-# rescue NameError
-#   puts "invalid command"
-# rescue LoadError
-#   puts "This is not a bakery. Please run 'bake init' first."
+rescue NameError
+  puts "invalid command"
+rescue LoadError
+  puts "This is not a bakery. Please run 'bake init' first."
 end
 
 exit # bye
