@@ -8,20 +8,14 @@ require 'bakery/generators'
 # match --force or match -f or match an existing file.
 if ARGV.empty? or ARGV.first.match(/^-f|--force$/) or File.exist?(ARGV.first)
   ARGV.unshift "compile"
-end
-
-if !!ARGV.first.match(/^-v|--version$/)
-  puts "bakery v#{Bakery::VERSION}"
-  exit
-end
-
-if !!ARGV.first.match(/^-h|--help|help$/) and ARGV[1].nil?
-  puts "help"
+else
+  puts "bakery v#{Bakery::VERSION}" if !!ARGV.first.match(/^-v|--version$/)
+  puts "help" if !!ARGV.first.match(/^-h|--help$/) and ARGV[1].nil?
   exit
 end
 
 begin
-  command = !!ARGV.first.match(/^-h|--help|help$/) ? ARGV[1] : ARGV[0]
+  command = ARGV.first.eql?("help") ? ARGV[1] : ARGV[0]
   generator = Bakery::Generators.const_get(command.camelize)
 rescue NameError
   puts "invalid command"
