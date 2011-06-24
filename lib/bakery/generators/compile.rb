@@ -8,10 +8,6 @@ module Bakery
       argument :path, :optional => true
       class_option :force, :optional => true, :default => false, :aliases => ["-f"]
 
-      def setup
-        Bakery.configure!
-      end
-
       def create_public_directory
         empty_directory Bakery::Item::PUBLIC_DIRECTORY.to_s
       end

@@ -15,10 +15,6 @@ module Bakery
         File.expand_path("../templates/", __FILE__)
       end
 
-      def setup
-        Bakery.configure!
-      end
-
       def create_a_file
         if model == "template"
           create_a_template

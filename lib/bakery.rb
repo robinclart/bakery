@@ -35,7 +35,7 @@ module Bakery
     module_eval(&block)
   end
 
-  def self.configure!
+  def self.load_config!
     load "Bakefile"
   end
 end

@@ -8,27 +8,23 @@ require 'bakery/generators'
 # match --force or match -f or match an existing file.
 if ARGV.empty? or ARGV.first.match(/^-f|--force$/) or File.exist?(ARGV.first)
   ARGV.unshift "compile"
-else
-  puts "bakery v#{Bakery::VERSION}" if !!ARGV.first.match(/^-v|--version$/)
-  puts "help" if !!ARGV.first.match(/^-h|--help$/) and ARGV[1].nil?
-  exit
 end
 
 begin
-  command = ARGV.first.eql?("help") ? ARGV[1] : ARGV[0]
-  generator = Bakery::Generators.const_get(command.camelize)
-rescue NameError
-  puts "invalid command"
-  exit
-end
+  command = ARGV.first.eql?("help") ? ARGV.shift : ARGV.first
+  generator = Bakery::Generators.const_get(ARGV.shift.camelize)
 
-if ARGV.first.eql?("help")
-  generator.help Thor::Base.shell.new
-elsif File.exist?('Bakefile') || ARGV.first.eql?("init")
-  ARGV.shift
-  generator.start
-else
-  puts "This is not a bakery. Please run 'bake init' first."
+  Bakery.load_config! unless command == "init"
+
+  if command == "help"
+    generator.help Thor::Base.shell.new
+  else
+    generator.start
+  end
+# rescue NameError
+#   puts "invalid command"
+# rescue LoadError
+#   puts "This is not a bakery. Please run 'bake init' first."
 end
 
 exit # bye
