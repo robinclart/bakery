@@ -10,7 +10,7 @@ module Bakery
   #   of the page (1)
   # - A template with the same basename as the page (2)
   # - A template with the name of the page's model (3)
-  # - The index template file (4)
+  # - The default template (4)
   #
   # For example a post with the following path "posts/hello-world.html.md"
   # will use:
@@ -18,21 +18,17 @@ module Bakery
   # - "templates/supplied-template-name.html.erb" (1)
   # - "templates/hello-world.html.erb" (2)
   # - "templates/post.html.erb" (3)
-  # - "templates/index.html.erb" (4)
+  # - "templates/page.html.erb" (4)
   #
   # Note that the extension (without the ".md" for the pages and without the
   # ".erb" for a templates) should be the same to match. So if you are using
   # ".htm" instead of ".html" in your file name your template basename should
   # reflect this difference.
-  #
-  # Also be noted that all pages starting with "index.*" won't resolve at (2)
-  # but at (4) in order to allow those pages to be compiled into the
-  # template with the name of the page's model
   class Template
-    def initialize(page, fallback = "index")
+    def initialize(page, fallback = "page")
       @fallback      = [fallback, page.extname].join
       @from_model    = [page.model, page.extname].join
-      @from_filename = page.filename unless page.filename == @fallback
+      @from_filename = page.filename
       @from_data     = page.data.template
     end
 
@@ -69,13 +65,13 @@ module Bakery
     end
 
     # Returns an array of all the availables template names (without the
-    # ".erb" extension) for the current page except the fallback one.
+    # ".erb" extension) for the current page.
     def available_filenames
       hypothetical_filenames.select { |name| File.exists? resolve_path(name) }
     end
 
     # Returns an array of all the suitable template names (without the ".erb"
-    # extension) for the current page except the fallback one.
+    # extension) for the current page.
     def hypothetical_filenames
       [from_data, from_filename, from_model].compact
     end

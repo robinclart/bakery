@@ -10,11 +10,11 @@ class Bakery::TestPage < MiniTest::Unit::TestCase
   end
 
   def test_path
-    assert_equal "templates/index.html.erb", @page.template.path
+    assert_equal "templates/page.html.erb", @page.template.path
   end
 
   def test_filename
-    assert_equal "index.html", @page.template.filename
+    assert_equal "page.html", @page.template.filename
   end
 
   def test_from_model
@@ -33,11 +33,5 @@ class Bakery::TestPage < MiniTest::Unit::TestCase
   def test_hypothetical_filenames
     assert_equal ["special.html", "page.html", "page.html"], @page.template.hypothetical_filenames
     assert_equal ["special.html", "post.html", "post.html"], @post.template.hypothetical_filenames
-  end
-
-  def test_from_filename_when_index
-    assert_nil Bakery::Page.new("site/sub/index.htm").template.from_filename
-    assert_nil Bakery::Page.new("site/sub/index.html").template.from_filename
-    assert_nil Bakery::Page.new("site/sub/index.html.md").template.from_filename
   end
 end
