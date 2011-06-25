@@ -1,21 +1,23 @@
 module Bakery
   class Partial
     def initialize(name)
-      @path = Pathname.new(resolve_path(name))
+      @pathname = Pathname.new(resolve_path(name))
     end
 
+    attr_reader :pathname
+
     def path
-      @path.to_s
+      @pathname.to_s
     end
 
     def content
-      @content ||= @path.read
+      @content ||= @pathname.read
     end
 
     private
 
     def resolve_path(name)
-      File.join(Template::DIRECTORY, "_#{name}.erb")
+      Template::DIRECTORY.join("_#{name}.erb").to_s
     end
   end
 end

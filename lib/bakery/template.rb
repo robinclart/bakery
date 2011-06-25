@@ -79,7 +79,7 @@ module Bakery
     private
 
     def resolve_path(name) #:nodoc:
-      File.join(DIRECTORY, "#{name}.erb")
+      DIRECTORY.join("#{name}.erb").to_s
     end
   end
 end
