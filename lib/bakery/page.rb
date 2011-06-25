@@ -25,15 +25,15 @@ module Bakery
     end
 
     def url
-      Routing.root + url_path.sub(/index.htm[l]?$/, "")
+      @url ||= Routing.root + url_path.sub(/index.htm[l]?$/, "")
     end
 
     def url_path
-      Pathname.new(interpolate_route + extname).cleanpath.to_s
+      @url_path ||= Pathname.new(interpolate_route + extname).cleanpath.to_s
     end
 
     def model
-      data.model || "page"
+      @model ||= data.model || "page"
     end
 
     # Returns the filename of the page without the ".md" if it's present.
@@ -101,8 +101,8 @@ module Bakery
       @data ||= OpenStruct.new(YAML.load(raw)).freeze
     end
 
-    def interpolate_route(pattern = %r/:[a-z_]+/) #:nodoc:
-      route.gsub(pattern) do |chunk|
+    def interpolate_route
+      @interpolated_route ||= route.gsub(/:[a-z_]+/) do |chunk|
         case chunk.gsub!(":", "")
         when "dirname"          then dirname
         when "filename"         then basename
@@ -112,13 +112,10 @@ module Bakery
       end
     end
 
-    def published_at(meth = nil) #:nodoc:
-      date = Date.parse(data.published_at) if data.published_at
-
-      if meth && date
-        date.send(meth).to_s
-      else
-        date
+    def published_at(meth = nil)
+      if data.published_at
+        date = Date.parse(data.published_at)
+        meth ? date.send(meth).to_s : date
       end
     end
 
@@ -139,7 +136,7 @@ module Bakery
     private
 
     def route
-      data.route || Routing.routes[model.intern] || DEFAULT_ROUTE
+      @route ||= data.route || Routing.routes[model.intern] || DEFAULT_ROUTE
     end
 
     def interpolate_chunk(chunk)

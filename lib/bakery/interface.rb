@@ -8,9 +8,8 @@ module Bakery
       # Invoke with generate without explicitly asking for it.
       ARGV.unshift("generate") if Commands::Generate.implicit_generator?
 
-      command_name = ARGV.shift
-
       begin
+        command_name = ARGV.shift
         command = Commands.command_path(command_name).camelize.constantize
       rescue NameError
         puts "Invalid command (#{command_name})."
