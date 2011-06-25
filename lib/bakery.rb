@@ -13,6 +13,7 @@ require "bakery/version"
 module Bakery
   extend ActiveSupport::Autoload
 
+  autoload :Configuration
   autoload :Routing
   autoload :Page
   autoload :Output

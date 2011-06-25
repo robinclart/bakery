@@ -5,7 +5,6 @@ module Bakery
     module Generate extend self
       def start
         generator_name = ARGV.shift
-        setup(generator_name)
         generator = "bakery/generators/#{generator_name}"
 
         require generator
@@ -15,11 +14,8 @@ module Bakery
         exit
       end
 
-      def setup(generator_name)
-        load "Bakefile" unless generator_name == "init"
-      rescue LoadError
-        puts "This is not a bakery. Please run 'bake init' first."
-        exit
+      def init?
+        ARGV.include?("generate") and ARGV.include?("init")
       end
 
       def implicit_output?

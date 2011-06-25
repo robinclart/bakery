@@ -7,8 +7,8 @@ module Bakery
       class_option :force, optional: true, default: false, aliases: ["-f"]
 
       def create_the_helper
-        filename = [name.parameterize("_"), "rb"].join(".")
-        template "helper.tt", File.join("helpers", filename)
+        filename = "#{name.parameterize("_")}_helper.rb"
+        template "helper.tt", Bakery::Helpers::DIRECTORY.join(filename)
       end
     end
   end

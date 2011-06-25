@@ -1,23 +1,33 @@
 module Bakery
   module Helpers extend self
+    DIRECTORY = Pathname.new("helpers")
+
     def register(helper)
-      list << helper
+      all << helper
     end
 
-    def list
+    def all
       @@helpers ||= []
+    end
+
+    def load!
+      all.each { |helper| load_and_include helper }
+    end
+
+    def load_and_include(path)
+      load path
+      Context.send :include, modulize(path).constantize
+    # rescue NameError
+    #   puts "#{modulize(path)}:Module was expected from #{path}"
+    #   exit
+    end
+
+    def modulize(path)
+      File.basename(path, ".rb").camelize
     end
   end
 end
 
-Dir["helpers/*.rb"].sort.each do |helper_path|
-  helper = File.basename(helper_path, ".rb").camelize
-  load helper_path
-
-  begin
-    Bakery::Helpers.register helper.constantize
-  rescue NameError
-    puts "#{helper}:Module was expected from #{helper_path}"
-    exit
-  end
+Dir["helpers/*_helper.rb"].sort.each do |helper_path|
+  Bakery::Helpers.register helper_path
 end

@@ -1,2 +1,2 @@
-module <%= name.parameterize("_").camelize %>
+module <%= Bakery::Helpers.modulize "#{name.parameterize("_")}_helper.rb" %>
 end

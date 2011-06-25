@@ -6,8 +6,6 @@ module Bakery
       @filename       = @pathname.basename(".md")
       @extname        = @filename.extname
       @basename       = @filename.basename(@extname).to_s
-
-      load_helpers!
     end
 
     DIRECTORY = Pathname.new("site")
@@ -24,12 +22,12 @@ module Bakery
       @pathname.to_s
     end
 
-    def url
-      @url ||= Routing.root + url_path.sub(/index.htm[l]?$/, "")
+    def relative_path
+      @relative_path ||= Pathname.new(interpolate_route + extname).cleanpath.to_s
     end
 
-    def url_path
-      @url_path ||= Pathname.new(interpolate_route + extname).cleanpath.to_s
+    def url
+      @url ||= Routing.root + relative_path.sub(/index.htm[l]?$/, "")
     end
 
     def model
@@ -129,11 +127,11 @@ module Bakery
       list.map { |p| self.new(p) }
     end
 
+    private
+
     def self.list
       Dir.glob DIRECTORY.join("**", "*.*").to_s
     end
-
-    private
 
     def route
       @route ||= data.route || Routing.routes[model.intern] || DEFAULT_ROUTE
@@ -141,12 +139,6 @@ module Bakery
 
     def interpolate_chunk(chunk)
       data.send(chunk).parameterize if data.send(chunk)
-    end
-
-    # Extends the context with all the built-in helpers and with the helpers
-    # specified in the <tt>config.helpers</tt> statement from the Bakefile.
-    def load_helpers!
-      Helpers.list.each { |helper| context.extend helper }
     end
   end
 end
