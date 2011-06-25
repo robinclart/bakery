@@ -149,8 +149,8 @@ module Bakery
     # Extends the context with all the built-in helpers and with the helpers
     # specified in the <tt>config.helpers</tt> statement from the Bakefile.
     def mix_helpers!
-      Bakery::Helpers.constants.each do |helper|
-        context.extend "Bakery::Helpers::#{helper}".constantize
+      Bakery::Helpers.list.each do |helper|
+        context.extend helper
       end
     end
   end
