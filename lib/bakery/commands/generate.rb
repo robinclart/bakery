@@ -15,7 +15,11 @@ module Bakery
       end
 
       def init?
-        ARGV.include?("generate") and ARGV.include?("init")
+        ARGV.first.eql?("init")
+      end
+
+      def output?
+        ARGV.first.eql?("output")
       end
 
       def implicit_output?
@@ -23,7 +27,7 @@ module Bakery
       end
 
       def implicit_generator?
-        ["init", "output"].include? ARGV.first
+        init? or output?
       end
     end
   end
