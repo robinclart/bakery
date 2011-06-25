@@ -1,6 +1,6 @@
 module Bakery
   module Commands
-    alias_command :version, "-v", "--version"
+    alias_command :version
 
     module Version extend self
       def start

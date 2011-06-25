@@ -1,6 +1,6 @@
 module Bakery
   module Commands
-    alias_command :help, "-h", "--help"
+    alias_command :help
 
     module Help extend self
       def start
