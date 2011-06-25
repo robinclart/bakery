@@ -9,9 +9,8 @@ module Bakery
       @@routes.merge!(rule)
     end
 
-    def routes(model)
+    def routes
       @@routes ||= {}
-      @@routes[model.intern]
     end
 
     def root(url = nil)
