@@ -1,9 +1,8 @@
 ---
 title: <%= title %>
-model: <%= model %>
 published: true
 published_at: <%= Date.today.strftime("%d %b %Y") %>
-
+<% fields.each do |k,v| %><%= "#{k}: #{v}\n" %><% end %>
 ---
 
 # <%= title %>
