@@ -1,5 +1,5 @@
 ---
-path: special/path/index
+route: special/path/index
 ---
 
 # Test

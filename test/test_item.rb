@@ -27,18 +27,18 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
   end
 
   def test_output_path
-    assert_equal "public/page.html", @page.output_path
-    assert_equal "public/blog/post/john-doe/2011/4/29/post.html", @post.output_path
+    assert_equal "public/page.html", @page.output.path
+    assert_equal "public/blog/post/john-doe/2011/4/29/post.html", @post.output.path
   end
 
   def test_output_path_in_subdirectory
     page = Bakery::Item.new("site/sub/index.html.md")
-    assert_equal "public/sub/index.html", page.output_path
+    assert_equal "public/sub/index.html", page.output.path
   end
 
-  def test_output_path_with_data_path
+  def test_output_path_with_data_route
     page = Bakery::Item.new("site/data_path.html.md")
-    assert_equal "public/special/path/index.html", page.output_path
+    assert_equal "public/special/path/index.html", page.output.path
   end
 
   def test_template

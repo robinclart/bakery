@@ -15,6 +15,7 @@ module Bakery
   autoload :VERSION,    "bakery/version"
 
   autoload :Item,       "bakery/item"
+  autoload :Output,     "bakery/output"
   autoload :Template,   "bakery/template"
   autoload :Partial,    "bakery/partial"
   autoload :Context,    "bakery/context"
@@ -26,7 +27,7 @@ module Bakery
     @@config ||= OpenStruct.new({
       :root_url => "/",
       :models => ["page"],
-      :output_paths => {},
+      :routes => {},
       :helpers => [Helpers::Data, Helpers::Url]
     })
   end

@@ -4,7 +4,7 @@ Bakery.configure do
 
   config.models += ["post", "article"]
 
-  config.output_paths.merge!({
+  config.routes.merge!({
     :post => "blog/:model/:author/:wrong/:year/:month/:day/:filename"
   })
 

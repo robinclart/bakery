@@ -1,28 +1,27 @@
 module Bakery
   class Item
     def initialize(path)
-      @path           = Pathname.new(path).cleanpath
-      @dirname        = @path.relative_path_from(DIRECTORY).dirname
-      @filename       = @path.basename(".md")
+      @pathname       = Pathname.new(path).cleanpath
+      @dirname        = @pathname.relative_path_from(DIRECTORY).dirname
+      @filename       = @pathname.basename(".md")
       @extname        = @filename.extname
       @basename       = @filename.basename(@extname).to_s
-      @output_error   = false
 
       mix_helpers!
     end
 
     DIRECTORY = Pathname.new("site")
-    PUBLIC_DIRECTORY = Pathname.new("public")
-    OUTPUT_PATH = ":dirname/:filename"
 
-    attr_reader :extname, :basename, :output_error
+    DEFAULT_ROUTE = ":dirname/:filename"
 
-    def pathname
-      @path
-    end
+    attr_reader :pathname
+
+    attr_reader :extname
+
+    attr_reader :basename
 
     def path
-      @path.to_s
+      @pathname.to_s
     end
 
     def model
@@ -38,53 +37,17 @@ module Bakery
       @dirname.to_s
     end
 
-    # Returns the output path of an item.
-    #
-    # By default the items from the "page" model will be rendered at
-    # the root of the public directory. All the other models that you have
-    # supplied in your Bakefile will be rendered in ":base/:sub/:name"
-    #
-    # If the output path have been overwritten in the Bakefile the path
-    # will be interpolated and every keywords found (a string beginning by a
-    # colon) found will be:
-    #
-    # - replaced by the value of the base directory (for the :base keywords).
-    # - replaced by the value of the sub directory (for the :sub keywords).
-    # - replaced by the value of the filename directory (for the :name keywords).
-    # - replaced by the value of the day, month, year of the published_at
-    #   field if it is present in the YAML Front Matter (for the :day, :month
-    #   and :year keywords).
-    # - replaced by the value of the same keyword in the YAML Front Matter.
-    # - removed if none of the previous conditions were fulfilled.
-    #
-    # Example of interpolation configuration one can found in a Bakefile:
-    #
-    #   config.output_paths.merge!({
-    #     :post => ":base/:author/:year/:month/:day/:name"
-    #   })
-    #
-    # This will give: "public/posts/john-doe/2011/4/29/hello-world.html".
-    #
-    # or for this:
-    #
-    #   config.output_paths.merge!({
-    #     :post => ":base/:author/:year/:month/:day/:name/index"
-    #   })
-    #
-    # This will give: "public/posts/john-doe/2011/4/29/hello-world/index.html".
-    #
-    # Note that the extension are automatically appended to the path.
-    def output_path
-      p = data.path || Bakery.config.output_paths[model.intern] || OUTPUT_PATH
-      PUBLIC_DIRECTORY.join(interpolate_path(p) + @extname).cleanpath.to_s
+    # Render the item into its template.
+    def render
+      output.content = context.render(template.content) { to_html }
+      { status: "ok", content: output.content }
+    rescue => e
+      output.content = ERB.new(Template::ERROR.read).result(binding),
+      { status: "error", content: output.content, exception: e }
     end
 
-    # Compiles the item into its template.
-    def output!
-      context.render(template.content) { to_html }
-    rescue => e
-      @output_error = e
-      ERB.new(Template::ERROR.read).result(binding)
+    def output
+      @output ||= Output.new(self)
     end
 
     # Returns an instance of Template that holds all the information about the
@@ -101,7 +64,7 @@ module Bakery
 
     # Returns the raw content from the item's file.
     def raw
-      @raw ||= @path.read
+      @raw ||= @pathname.read
     end
 
     # Returns all the content under the YAML Front Matter stil unprocessed.
@@ -117,13 +80,34 @@ module Bakery
     end
 
     def markdown?
-      @path.extname == ".md"
+      @pathname.extname == ".md"
     end
 
     # Returns a freezed OpenStruct loaded with all the data present in the
     # YAML Front Matter.
     def data
       @data ||= OpenStruct.new(YAML.load(raw)).freeze
+    end
+
+    def interpolate_route(pattern = %r/:[a-z_]+/) #:nodoc:
+      route.gsub(pattern) do |chunk|
+        case chunk.gsub!(":", "")
+        when "dirname"          then dirname
+        when "filename"         then basename
+        when /^day|month|year$/ then published_at(chunk)
+        else interpolate_chunk(chunk)
+        end
+      end
+    end
+
+    def published_at(meth = nil) #:nodoc:
+      date = Date.parse(data.published_at) if data.published_at
+
+      if meth && date
+        date.send(meth).to_s
+      else
+        date
+      end
     end
 
     def self.where(conditions = {})
@@ -142,29 +126,18 @@ module Bakery
 
     private
 
+    def route
+      data.route || Bakery.config.routes[model.intern] || DEFAULT_ROUTE
+    end
+
+    def interpolate_chunk(chunk)
+      data.send(chunk).parameterize if data.send(chunk)
+    end
+
     # Extends the context with all the built-in helpers and with the helpers
     # specified in the <tt>config.helpers</tt> statement from the Bakefile.
     def mix_helpers!
       Bakery.config.helpers.each { |h| context.extend h }
-    end
-
-    def interpolate_path(p, pattern = %r/:[a-z_]+/) #:nodoc:
-      p.gsub(pattern) do |meth|
-        case meth
-          when ":dirname"  then dirname
-          when ":filename" then basename
-          else data_chunk(meth.sub(/:/, ""))
-        end
-      end
-    end
-
-    def data_chunk(m) #:nodoc:
-      return date_chunk(m) if m.match(/^day|month|year$/)
-      return data.send(m).parameterize if data.send(m)
-    end
-
-    def date_chunk(m) #:nodoc:
-      Date.parse(data.published_at).send(m).to_s if data.published_at
     end
   end
 end

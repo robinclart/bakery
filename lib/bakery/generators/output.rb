@@ -7,7 +7,7 @@ module Bakery
       class_option :force, :optional => true, :default => false, :aliases => ["-f"]
 
       def create_public_directory
-        empty_directory Bakery::Item::PUBLIC_DIRECTORY.to_s
+        empty_directory Bakery::Output::DIRECTORY.to_s
       end
 
       def compile
@@ -23,29 +23,23 @@ module Bakery
       end
 
       def compile_a_single_item
-        item = Bakery::Item.new(path)
-
-        if Bakery.config.models.include?(item.model)
-          create_item_file item
-        else
-          say "Add #{item_model} to your 'config.models' (see Bakefile)", :red
-        end
+        create_item_file Bakery::Item.new(path)
       end
 
       def create_item_file(item)
         if item.data.published        
           say_status "compile", "#{item.path} -> #{item.template.path}", :cyan
-          output_content = item.output!
+          result = item.render
 
-          if item.output_error
-            remove_file item.output_path, :verbose => false
-            say_status "error", item.output_path, :red
-            say "Run 'open #{item.output_path}' for more information on the error."
+          if result[:status] == "error"
+            remove_file item.output.path, :verbose => false
+            say_status "error", item.output.path, :red
+            say "Run 'open #{item.output.path}' for more information on the error."
             say "Once you have fixed the issue run 'bake #{item.path} -f' to recompile it."
           end
 
-          create_file item.output_path, output_content, :verbose => !item.output_error
-          exit if item.output_error
+          create_file item.output.path, item.output.content, :verbose => !result[:exception]
+          exit if result[:exception]
         else
           say_status :skip, item.path, :yellow
         end

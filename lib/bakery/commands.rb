@@ -8,9 +8,10 @@ module Bakery
       # Invoke with generate without explicitly asking for it.
       ARGV.unshift("generate") if Generate.implicit_generator?
 
-      command_path(ARGV.shift).camelize.constantize.start
+      command_name = ARGV.shift
+      command_path(command_name).camelize.constantize.start
     rescue NameError
-      puts "Invalid command (#{command})."
+      puts "Invalid command (#{command_name})."
     end
 
     def alias_command(scope, *aliases)

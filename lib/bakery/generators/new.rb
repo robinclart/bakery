@@ -14,10 +14,8 @@ module Bakery
           create_a_template
         elsif model == "partial"
           create_a_partial
-        elsif Bakery.config.models.include?(model)
-          create_an_item
         else
-          say "Add #{model} to your 'config.models' (see Bakefile)", :red
+          create_an_item
         end
       end
 
