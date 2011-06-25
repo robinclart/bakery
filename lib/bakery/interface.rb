@@ -1,5 +1,5 @@
 module Bakery
-  module Interface
+  module Interface extend self
     def start
       # Invoke the output command if there is no arguments or if the first
       # argument is an existing file or the force flag.
