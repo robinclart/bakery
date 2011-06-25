@@ -12,6 +12,7 @@ module Bakery
         generator.camelize.constantize.start
       rescue LoadError
         puts "Invalid generator (#{generator_name})."
+        exit
       end
 
       def setup(generator_name)
