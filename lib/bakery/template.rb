@@ -1,15 +1,15 @@
 module Bakery
   # == Template Lookup Procedure
   #
-  # The template used by an item will be the first one to match an existing
+  # The template used by a page will be the first one to match an existing
   # file in the "templates/" directory:
   #
   # The lookup order is as follow:
   #
   # - A template that match the template name supplied in the data section
-  #   of the item (1)
-  # - A template with the same basename as the item (2)
-  # - A template with the name of the item's model (3)
+  #   of the page (1)
+  # - A template with the same basename as the page (2)
+  # - A template with the name of the page's model (3)
   # - The index template file (4)
   #
   # For example a post with the following path "posts/hello-world.html.md"
@@ -20,55 +20,62 @@ module Bakery
   # - "templates/post.html.erb" (3)
   # - "templates/index.html.erb" (4)
   #
-  # Note that the extension (without the ".md" for the items and without the
+  # Note that the extension (without the ".md" for the pages and without the
   # ".erb" for a templates) should be the same to match. So if you are using
   # ".htm" instead of ".html" in your file name your template basename should
   # reflect this difference.
   #
-  # Also be noted that all items starting with "index.*" won't resolve at (2)
-  # but at (4) in order to allow those items to be compiled into the
-  # template with the name of the item's model
+  # Also be noted that all pages starting with "index.*" won't resolve at (2)
+  # but at (4) in order to allow those pages to be compiled into the
+  # template with the name of the page's model
   class Template
-    def initialize(item, fallback = "index")
-      @fallback      = [fallback, item.extname].join
-      @from_model    = [item.model, item.extname].join
-      @from_filename = item.filename unless item.filename == @fallback
-      @from_data     = item.data.template
+    def initialize(page, fallback = "index")
+      @fallback      = [fallback, page.extname].join
+      @from_model    = [page.model, page.extname].join
+      @from_filename = page.filename unless page.filename == @fallback
+      @from_data     = page.data.template
     end
 
     ERROR = Pathname.new("../templates/error.html.erb").expand_path(__FILE__)
+
     DIRECTORY = Pathname.new("templates")
 
-    attr_reader :fallback, :from_model, :from_filename, :from_data
+    attr_reader :fallback
 
-    # Returns the content of the item's template.
-    def content
-      @content ||= pathname.read
-    end
+    attr_reader :from_model
+
+    attr_reader :from_filename
+
+    attr_reader :from_data
 
     def pathname
-      @path ||= Pathname.new(resolve_path(filename))
+      @pathname ||= Pathname.new(resolve_path(filename))
     end
 
-    # Returns the template path for the current item.
+    # Returns the template path for the current page.
     def path
       pathname.to_s
     end
 
-    # Returns the basename of the item's template (without the ".erb"
+    # Returns the content of the page's template.
+    def content
+      @content ||= pathname.read
+    end
+
+    # Returns the basename of the page's template (without the ".erb"
     # extension).
     def filename
       available_filenames.first or fallback
     end
 
     # Returns an array of all the availables template names (without the
-    # ".erb" extension) for the current item except the fallback one.
+    # ".erb" extension) for the current page except the fallback one.
     def available_filenames
       hypothetical_filenames.select { |name| File.exists? resolve_path(name) }
     end
 
     # Returns an array of all the suitable template names (without the ".erb"
-    # extension) for the current item except the fallback one.
+    # extension) for the current page except the fallback one.
     def hypothetical_filenames
       [from_data, from_filename, from_model].compact
     end

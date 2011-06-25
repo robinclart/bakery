@@ -14,7 +14,7 @@ require 'active_support/inflector'
 module Bakery
   autoload :VERSION,    "bakery/version"
 
-  autoload :Item,       "bakery/item"
+  autoload :Page,       "bakery/page"
   autoload :Output,     "bakery/output"
   autoload :Template,   "bakery/template"
   autoload :Partial,    "bakery/partial"

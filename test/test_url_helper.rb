@@ -1,11 +1,11 @@
 require File.expand_path('../../lib/bakery', __FILE__)
 require File.expand_path('../bakery_config', __FILE__)
-require File.expand_path('../item_mock', __FILE__)
+require File.expand_path('../page_mock', __FILE__)
 require 'minitest/autorun'
 
 class Bakery::TestDataHelper < MiniTest::Unit::TestCase
   def setup
-    @page = Bakery::Item.new("site/page.html.md")
+    @page = Bakery::Page.new("site/page.html.md")
   end
 
   def test_url
@@ -13,12 +13,12 @@ class Bakery::TestDataHelper < MiniTest::Unit::TestCase
   end
 
   def test_url_ending_with_index_html
-    page = Bakery::Item.new("site/index.html.md")
+    page = Bakery::Page.new("site/index.html.md")
     assert_equal "http://example.com/", page.context.url
   end
 
   def test_url_ending_with_index_htm
-    page = Bakery::Item.new("site/index.htm.md")
+    page = Bakery::Page.new("site/index.htm.md")
     assert_equal "http://example.com/", page.context.url
   end
 
@@ -38,7 +38,7 @@ class Bakery::TestDataHelper < MiniTest::Unit::TestCase
   end
 
   def test_link_ending_with_index_htm
-    page = Bakery::Item.new("site/index.htm.md")
+    page = Bakery::Page.new("site/index.htm.md")
     assert_equal "<a href=\"http://example.com/\">Test</a>", page.context.link("Test")
   end
 

@@ -1,5 +1,5 @@
 module Bakery
-  class Item
+  class Page
     def initialize(path)
       @pathname       = Pathname.new(path).cleanpath
       @dirname        = @pathname.relative_path_from(DIRECTORY).dirname
@@ -28,7 +28,7 @@ module Bakery
       data.model || "page"
     end
 
-    # Returns the filename of the item's file without the ".md" if it's present.
+    # Returns the filename of the page without the ".md" if it's present.
     def filename
       @filename.to_s
     end
@@ -37,7 +37,7 @@ module Bakery
       @dirname.to_s
     end
 
-    # Render the item into its template.
+    # Render the page into its template.
     def render
       output.content = context.render(template.content) { to_html }
       { status: "ok", content: output.content }
@@ -51,18 +51,18 @@ module Bakery
     end
 
     # Returns an instance of Template that holds all the information about the
-    # template for the current item.
+    # template for the current page.
     def template
       @template ||= Template.new(self)
     end
 
-    # Returns a Context instance tied to the current item. All items will be
+    # Returns a Context instance tied to the current page. All pages will be
     # rendered through this context.
     def context
       @context ||= Context.new(self)
     end
 
-    # Returns the raw content from the item's file.
+    # Returns the raw content from the page
     def raw
       @raw ||= @pathname.read
     end
@@ -111,8 +111,8 @@ module Bakery
     end
 
     def self.where(conditions = {})
-      all.select do |item|
-        conditions.all? { |k,v| item.data.send(k) == v }
+      all.select do |page|
+        conditions.all? { |k,v| page.data.send(k) == v }
       end
     end
 

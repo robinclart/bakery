@@ -1,10 +1,10 @@
 module Bakery
   class Context
-    def initialize(item)
-      @item = item
+    def initialize(page)
+      @page = page
     end
 
-    attr_reader :item
+    attr_reader :page
 
     def render(source)
       ERB.new(source).result(binding)

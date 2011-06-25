@@ -1,18 +1,18 @@
 module Bakery
   class Output
-    def initialize(item)
-      @pathname = DIRECTORY.join(item.interpolate_route + item.extname).cleanpath
+    def initialize(page)
+      @pathname = DIRECTORY.join(page.interpolate_route + page.extname).cleanpath
     end
 
     DIRECTORY = Pathname.new("public")
 
     attr_reader :pathname
 
-    attr_accessor :content
+    attr_writer :content
 
-    # Returns the output path of an item.
+    # Returns the output path of a page.
     #
-    # By default the items from the "page" model will be rendered at
+    # By default the pages from the "page" model will be rendered at
     # the root of the public directory. All the other models that you have
     # supplied in your Bakefile will be rendered in ":base/:sub/:name"
     #
@@ -48,6 +48,10 @@ module Bakery
     # Note that the extension are automatically appended to the path.
     def path
       @pathname.to_s
+    end
+
+    def content
+      @content ||= @pathname.read
     end
   end
 end

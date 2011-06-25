@@ -1,12 +1,12 @@
 require File.expand_path('../../lib/bakery', __FILE__)
 require File.expand_path('../bakery_config', __FILE__)
-require File.expand_path('../item_mock', __FILE__)
+require File.expand_path('../page_mock', __FILE__)
 require 'minitest/autorun'
 
-class Bakery::TestItem < MiniTest::Unit::TestCase
+class Bakery::TestPage < MiniTest::Unit::TestCase
   def setup
-    @page = Bakery::Item.new("site/page.html.md")
-    @post = Bakery::Item.new("site/post.html")
+    @page = Bakery::Page.new("site/page.html.md")
+    @post = Bakery::Page.new("site/post.html")
   end
 
   def test_filename
@@ -32,12 +32,12 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
   end
 
   def test_output_path_in_subdirectory
-    page = Bakery::Item.new("site/sub/index.html.md")
+    page = Bakery::Page.new("site/sub/index.html.md")
     assert_equal "public/sub/index.html", page.output.path
   end
 
   def test_output_path_with_data_route
-    page = Bakery::Item.new("site/data_path.html.md")
+    page = Bakery::Page.new("site/data_path.html.md")
     assert_equal "public/special/path/index.html", page.output.path
   end
 
@@ -47,7 +47,7 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
 
   def test_context
     assert_equal Bakery::Context, @page.context.class
-    assert_equal @page, @page.context.item
+    assert_equal @page, @page.context.page
   end
 
   def test_content
@@ -62,7 +62,7 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
     assert_equal "John Doe", @page.data.author
   end
 
-  def test_if_item_need_markdown_processing
+  def test_if_page_need_markdown_processing
     assert @page.markdown?
     refute @post.markdown?
   end

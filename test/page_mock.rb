@@ -1,5 +1,5 @@
 module Bakery
-  class Item
+  class Page
     def raw
       File.read("test/#{path}")
     end

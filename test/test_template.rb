@@ -1,12 +1,12 @@
 require File.expand_path('../../lib/bakery', __FILE__)
 require File.expand_path('../bakery_config', __FILE__)
-require File.expand_path('../item_mock', __FILE__)
+require File.expand_path('../page_mock', __FILE__)
 require 'minitest/autorun'
 
-class Bakery::TestItem < MiniTest::Unit::TestCase
+class Bakery::TestPage < MiniTest::Unit::TestCase
   def setup
-    @page = Bakery::Item.new("site/page.html.md")
-    @post = Bakery::Item.new("site/post.html")
+    @page = Bakery::Page.new("site/page.html.md")
+    @post = Bakery::Page.new("site/post.html")
   end
 
   def test_path
@@ -36,8 +36,8 @@ class Bakery::TestItem < MiniTest::Unit::TestCase
   end
 
   def test_from_filename_when_index
-    assert_nil Bakery::Item.new("site/sub/index.htm").template.from_filename
-    assert_nil Bakery::Item.new("site/sub/index.html").template.from_filename
-    assert_nil Bakery::Item.new("site/sub/index.html.md").template.from_filename
+    assert_nil Bakery::Page.new("site/sub/index.htm").template.from_filename
+    assert_nil Bakery::Page.new("site/sub/index.html").template.from_filename
+    assert_nil Bakery::Page.new("site/sub/index.html.md").template.from_filename
   end
 end

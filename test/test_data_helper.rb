@@ -1,11 +1,11 @@
 require File.expand_path('../../lib/bakery', __FILE__)
 require File.expand_path('../bakery_config', __FILE__)
-require File.expand_path('../item_mock', __FILE__)
+require File.expand_path('../page_mock', __FILE__)
 require 'minitest/autorun'
 
 class Bakery::TestDataHelper < MiniTest::Unit::TestCase
   def setup
-    @page = Bakery::Item.new("site/page.html.md")
+    @page = Bakery::Page.new("site/page.html.md")
   end
 
   def test_data
