@@ -9,7 +9,7 @@ module Bakery
 
       def url
         page.output.path.gsub("#{Bakery::Output::DIRECTORY}/",
-          Bakery.config.root_url).gsub(/index.htm[l]?$/, "")
+          Bakery::Routing.root).gsub(/index.htm[l]?$/, "")
       end
     end
   end

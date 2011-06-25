@@ -131,7 +131,7 @@ module Bakery
     private
 
     def route
-      data.route || Bakery.config.routes[model.intern] || DEFAULT_ROUTE
+      data.route || Bakery::Routing.routes(model.intern) || DEFAULT_ROUTE
     end
 
     def interpolate_chunk(chunk)

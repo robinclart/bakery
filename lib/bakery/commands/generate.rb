@@ -15,7 +15,7 @@ module Bakery
       end
 
       def setup(generator_name)
-        Bakery.load_config! unless generator_name == "init"
+        load "Bakefile" unless generator_name == "init"
       rescue LoadError
         puts "This is not a bakery. Please run 'bake init' first."
       end
