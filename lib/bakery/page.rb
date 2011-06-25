@@ -134,7 +134,7 @@ module Bakery
     end
 
     def route
-      @route ||= data.route || Routing.routes[model.intern] || DEFAULT_ROUTE
+      @route ||= data.route || Routing.routes.fetch(model.intern, DEFAULT_ROUTE)
     end
 
     def interpolate_chunk(chunk)
