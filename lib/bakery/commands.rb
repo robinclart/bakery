@@ -9,9 +9,15 @@ module Bakery
       ARGV.unshift("generate") if Generate.implicit_generator?
 
       command_name = ARGV.shift
-      command_path(command_name).camelize.constantize.start
-    rescue NameError
-      puts "Invalid command (#{command_name})."
+
+      begin
+        klass = command_path(command_name).camelize.constantize
+      rescue NameError
+        puts "Invalid command (#{command_name})."
+        exit
+      end
+
+      klass.start
     end
 
     def alias_command(scope, *aliases)
