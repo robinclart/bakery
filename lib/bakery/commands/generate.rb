@@ -21,7 +21,7 @@ module Bakery
       end
 
       def implicit_output?
-        ARGV.empty? or ARGV.first.match(/^-f|--force$/) or File.exist?(ARGV.first)
+        ARGV.empty? or ARGV.first.match(/^-f|--force|--no-force$/) or File.exist?(ARGV.first)
       end
 
       def implicit_generator?
