@@ -7,7 +7,7 @@ module Bakery
       @extname        = @filename.extname
       @basename       = @filename.basename(@extname).to_s
 
-      mix_helpers!
+      load_helpers!
     end
 
     DIRECTORY = Pathname.new("site")
@@ -148,10 +148,8 @@ module Bakery
 
     # Extends the context with all the built-in helpers and with the helpers
     # specified in the <tt>config.helpers</tt> statement from the Bakefile.
-    def mix_helpers!
-      Helpers.list.each do |helper|
-        context.extend helper
-      end
+    def load_helpers!
+      Helpers.list.each { |helper| context.extend helper }
     end
   end
 end
