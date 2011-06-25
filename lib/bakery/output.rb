@@ -50,5 +50,9 @@ module Bakery
     def content
       @content ||= @pathname.read
     end
+
+    def error?
+      !!@error
+    end
   end
 end

@@ -52,10 +52,10 @@ module Bakery
         output.error = false
       rescue => e
         output.content = ERB.new(Template::ERROR.read).result(binding)
-        output.error = true
+        output.error = e
       end
 
-      { content: output.content, error: output.error }
+      { content: output.content, error: output.error? }
     end
 
     def output
