@@ -8,9 +8,10 @@ module Bakery
       # Invoke with generate without explicitly asking for it.
       ARGV.unshift("generate") if Commands::Generate.implicit_generator?
 
-      Configuration.load! unless Commands::Generate.init?
-
-      Helpers.load!
+      unless Commands::Generate.init?
+        Configuration.load!
+        Helpers.load!
+      end
 
       begin
         command_name = ARGV.shift
