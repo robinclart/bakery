@@ -17,11 +17,15 @@ module Bakery
         command_name = ARGV.shift
         command = Commands.command_path(command_name).camelize.constantize
       rescue NameError
-        puts "Invalid command (#{command_name})."
+        puts "Invalid command: #{command_name}"
         exit
       end
 
       command.start
+    end
+
+    def skip_during_initialization(&block)
+      module_eval(&block) unless Commands::Generate.init?
     end
   end
 end
