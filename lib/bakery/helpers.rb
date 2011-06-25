@@ -10,11 +10,14 @@ module Bakery
   end
 end
 
-Dir["helpers/*.rb"].sort.each do |path|
-  load "helpers/#{File.basename(path, '.rb')}"
+Dir["helpers/*.rb"].sort.each do |helper_path|
+  helper = File.basename(helper_path, ".rb").camelize
+  load helper_path
+
   begin
-    Bakery::Helpers.register path.camelize.constantize
+    Bakery::Helpers.register helper.constantize
   rescue NameError
-    puts "#{path.camelize.constantize}:Module was expected"
+    puts "#{helper}:Module was expected from #{helper_path}"
+    exit
   end
 end
