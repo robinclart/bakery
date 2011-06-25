@@ -139,7 +139,7 @@ module Bakery
     private
 
     def route
-      data.route || Bakery::Routing.routes(model.intern) || DEFAULT_ROUTE
+      data.route || Routing.routes(model.intern) || DEFAULT_ROUTE
     end
 
     def interpolate_chunk(chunk)
@@ -149,7 +149,7 @@ module Bakery
     # Extends the context with all the built-in helpers and with the helpers
     # specified in the <tt>config.helpers</tt> statement from the Bakefile.
     def mix_helpers!
-      Bakery::Helpers.list.each do |helper|
+      Helpers.list.each do |helper|
         context.extend helper
       end
     end
