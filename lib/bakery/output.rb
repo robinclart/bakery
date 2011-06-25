@@ -10,6 +10,8 @@ module Bakery
 
     attr_writer :content
 
+    attr_accessor :error
+
     # Returns the output path of a page.
     #
     # By default the pages from the "page" model will be rendered at

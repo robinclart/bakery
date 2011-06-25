@@ -39,11 +39,15 @@ module Bakery
 
     # Render the page into its template.
     def render
-      output.content = context.render(template.content) { to_html }
-      { status: "ok", content: output.content }
-    rescue => e
-      output.content = ERB.new(Template::ERROR.read).result(binding),
-      { status: "error", content: output.content, exception: e }
+      begin
+        output.content = context.render(template.content) { to_html }
+        output.error = false
+      rescue => e
+        output.content = ERB.new(Template::ERROR.read).result(binding)
+        output.error = true
+      end
+
+      { content: output.content, error: output.error }
     end
 
     def output
