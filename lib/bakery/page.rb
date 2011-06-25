@@ -24,6 +24,14 @@ module Bakery
       @pathname.to_s
     end
 
+    def url
+      Routing.root + url_path.sub(/index.htm[l]?$/, "")
+    end
+
+    def url_path
+      Pathname.new(interpolate_route + extname).cleanpath.to_s
+    end
+
     def model
       data.model || "page"
     end

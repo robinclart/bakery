@@ -1,7 +1,7 @@
 module Bakery
   class Output
     def initialize(page)
-      @pathname = DIRECTORY.join(page.interpolate_route + page.extname).cleanpath
+      @pathname = DIRECTORY.join(page.url_path).cleanpath
     end
 
     DIRECTORY = Pathname.new("public")

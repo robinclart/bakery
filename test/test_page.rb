@@ -22,6 +22,20 @@ class Bakery::TestPage < MiniTest::Unit::TestCase
     assert_equal ".html", @post.extname
   end
 
+  def test_url
+    assert_equal "http://example.com/page.html", @page.url
+  end
+
+  def test_url_ending_with_index_html
+    page = Bakery::Page.new("site/index.html.md")
+    assert_equal "http://example.com/", page.url
+  end
+
+  def test_url_ending_with_index_htm
+    page = Bakery::Page.new("site/index.htm.md")
+    assert_equal "http://example.com/", page.url
+  end
+
   def test_model
     assert_equal "page", @page.model
   end
