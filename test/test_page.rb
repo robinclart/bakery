@@ -45,6 +45,32 @@ class Bakery::TestPage < MiniTest::Unit::TestCase
     assert_equal Bakery::Template, @page.template.class
   end
 
+  def test_template_path
+    assert_equal "templates/page.html.erb", @page.template.path
+  end
+
+  def test_template_filename
+    assert_equal "page.html", @page.template.filename
+  end
+
+  def test_template_from_model
+    assert_equal "page.html", @page.template.from_model
+    assert_equal "post.html", @post.template.from_model
+  end
+
+  def test_template_from_filename
+    assert_equal "page.html", @page.template.from_filename
+  end
+
+  def test_template_from_data
+    assert_equal "special.html", @page.template.from_data
+  end
+
+  def test_template_hypothetical_filenames
+    assert_equal ["special.html", "page.html", "page.html"], @page.template.hypothetical_filenames
+    assert_equal ["special.html", "post.html", "post.html"], @post.template.hypothetical_filenames
+  end
+
   def test_context
     assert_equal Bakery::Context, @page.context.class
     assert_equal @page, @page.context.page
