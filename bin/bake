@@ -2,6 +2,6 @@
 
 require 'bakery'
 
-Bakery::Commands.run
+Bakery::Interface.start
 
 exit # bye
