@@ -45,7 +45,7 @@ module Bakery
     attr_reader :from_data
 
     def pathname
-      @pathname ||= Pathname.new(resolve_path(filename))
+      @pathname ||= self.class.resolve_pathname(filename)
     end
 
     # Returns the template path for the current page.
@@ -61,25 +61,23 @@ module Bakery
     # Returns the basename of the page's template (without the ".erb"
     # extension).
     def filename
-      available_filenames.first or fallback
-    end
-
-    # Returns an array of all the availables template names (without the
-    # ".erb" extension) for the current page.
-    def available_filenames
-      hypothetical_filenames.select { |name| File.exists? resolve_path(name) }
-    end
-
-    # Returns an array of all the suitable template names (without the ".erb"
-    # extension) for the current page.
-    def hypothetical_filenames
-      [from_data, from_filename, from_model].compact
+      filenames.first or fallback
     end
 
     private
 
-    def resolve_path(name) #:nodoc:
-      DIRECTORY.join("#{name}.erb").to_s
+    def filenames
+      [from_data, from_filename, from_model].compact.select do |f|
+        self.class.resolve_pathname(f).exist?
+      end
+    end
+
+    def self.resolve_pathname(name) #:nodoc:
+      DIRECTORY.join("#{name}.erb")
+    end
+
+    def self.resolve_partial_pathname(name)
+      resolve_pathname("_#{name}")
     end
   end
 end

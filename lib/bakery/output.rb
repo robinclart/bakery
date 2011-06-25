@@ -22,9 +22,8 @@ module Bakery
     # will be interpolated and every keywords found (a string beginning by a
     # colon) found will be:
     #
-    # - replaced by the value of the base directory (for the :base keywords).
-    # - replaced by the value of the sub directory (for the :sub keywords).
-    # - replaced by the value of the filename directory (for the :name keywords).
+    # - replaced by the value of the directory (for the :dirname keywords).
+    # - replaced by the value of the filename (for the :filename keywords).
     # - replaced by the value of the day, month, year of the published_at
     #   field if it is present in the YAML Front Matter (for the :day, :month
     #   and :year keywords).
@@ -33,17 +32,13 @@ module Bakery
     #
     # Example of interpolation configuration one can found in a Bakefile:
     #
-    #   config.routes.merge!({
-    #     :post => ":base/:author/:year/:month/:day/:name"
-    #   })
+    #   route post: ":dirname/:author/:year/:month/:day/:filename"
     #
     # This will give: "public/posts/john-doe/2011/4/29/hello-world.html".
     #
     # or for this:
     #
-    #   config.routes.merge!({
-    #     :post => ":base/:author/:year/:month/:day/:name/index"
-    #   })
+    #   route post: ":dirname/:author/:year/:month/:day/:filename/index"
     #
     # This will give: "public/posts/john-doe/2011/4/29/hello-world/index.html".
     #

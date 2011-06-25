@@ -17,7 +17,6 @@ module Bakery
   autoload :Page
   autoload :Output
   autoload :Template
-  autoload :Partial
   autoload :Context
   autoload :Helpers
   autoload :Interface

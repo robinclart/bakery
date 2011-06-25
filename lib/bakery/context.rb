@@ -11,7 +11,7 @@ module Bakery
     end
 
     def partial(name)
-      render Partial.new(name).content
+      render Template.resolve_partial_pathname(name).read
     end
 
     def markdown(source)

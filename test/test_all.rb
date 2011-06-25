@@ -1,7 +1,14 @@
-require File.expand_path('../../lib/bakery', __FILE__)
-require File.expand_path('../bakery_config', __FILE__)
-require File.expand_path('../page_mock', __FILE__)
 require 'minitest/autorun'
+require File.expand_path('../../lib/bakery', __FILE__)
+
+Bakery::Routing.draw do
+  root "http://example.com/"
+  route post: "blog/:model/:author/:wrong/:year/:month/:day/:filename"
+end
+
+class Bakery::Page
+  def raw ; File.read("test/#{path}") ; end
+end
 
 class Bakery::TestPage < MiniTest::Unit::TestCase
   def setup
@@ -80,11 +87,6 @@ class Bakery::TestPage < MiniTest::Unit::TestCase
     assert_equal "special.html", @page.template.from_data
   end
 
-  def test_template_hypothetical_filenames
-    assert_equal ["special.html", "page.html", "page.html"], @page.template.hypothetical_filenames
-    assert_equal ["special.html", "post.html", "post.html"], @post.template.hypothetical_filenames
-  end
-
   def test_context
     assert_equal Bakery::Context, @page.context.class
     assert_equal @page, @page.context.page
@@ -105,5 +107,10 @@ class Bakery::TestPage < MiniTest::Unit::TestCase
   def test_if_page_need_markdown_processing
     assert @page.markdown?
     refute @post.markdown?
+  end
+
+  def test_partial_name
+    assert_equal "templates/_test.html.erb",
+      Bakery::Template.resolve_partial_pathname("test.html").to_s
   end
 end

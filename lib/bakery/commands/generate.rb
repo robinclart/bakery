@@ -19,6 +19,7 @@ module Bakery
         load "Bakefile" unless generator_name == "init"
       rescue LoadError
         puts "This is not a bakery. Please run 'bake init' first."
+        exit
       end
 
       def implicit_output?
