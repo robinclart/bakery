@@ -4,14 +4,7 @@ module Bakery
 
     module Generate extend self
       def start
-        generator_name = ARGV.shift
-        generator = "bakery/generators/#{generator_name}"
-
-        require generator
-        generator.camelize.constantize.start
-      rescue LoadError
-        puts "Invalid generator: #{generator_name}"
-        exit
+        Generators.load("bakery/generators/#{ARGV.shift}").start
       end
 
       def init?
