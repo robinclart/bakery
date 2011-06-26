@@ -8,6 +8,22 @@ module Bakery
       @basename       = @filename.basename(@extname).to_s
     end
 
+    class << self
+      def list
+        Dir.glob DIRECTORY.join("**", "*.*").to_s
+      end
+
+      def all
+        list.map { |p| self.new(p) }
+      end
+
+      def where(conditions = {})
+        all.select do |page|
+          conditions.all? { |k,v| page.data.send(k) == v }
+        end
+      end
+    end
+
     DIRECTORY = Pathname.new("site")
 
     DEFAULT_ROUTE = ":dirname/:filename"
@@ -117,21 +133,7 @@ module Bakery
       end
     end
 
-    def self.where(conditions = {})
-      all.select do |page|
-        conditions.all? { |k,v| page.data.send(k) == v }
-      end
-    end
-
-    def self.all
-      list.map { |p| self.new(p) }
-    end
-
     private
-
-    def self.list
-      Dir.glob DIRECTORY.join("**", "*.*").to_s
-    end
 
     def route
       @route ||= data.route || Routing.routes.fetch(model.intern, DEFAULT_ROUTE)

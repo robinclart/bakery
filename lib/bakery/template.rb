@@ -32,6 +32,16 @@ module Bakery
       @from_data     = page.data.template
     end
 
+    class << self
+      def resolve_pathname(name) #:nodoc:
+        DIRECTORY.join("#{name}.erb")
+      end
+
+      def resolve_partial_pathname(name)
+        resolve_pathname("_#{name}")
+      end
+    end
+
     ERROR = Pathname.new("../templates/error.html.erb").expand_path(__FILE__)
 
     DIRECTORY = Pathname.new("templates")
@@ -70,14 +80,6 @@ module Bakery
       [from_data, from_filename, from_model].compact.select do |f|
         self.class.resolve_pathname(f).exist?
       end
-    end
-
-    def self.resolve_pathname(name) #:nodoc:
-      DIRECTORY.join("#{name}.erb")
-    end
-
-    def self.resolve_partial_pathname(name)
-      resolve_pathname("_#{name}")
     end
   end
 end
