@@ -17,9 +17,9 @@ module Bakery
     def load_and_include(path)
       load path
       Context.send :include, modulize(path).constantize
-    # rescue NameError
-    #   puts "#{modulize(path)}:Module was expected from #{path}"
-    #   exit
+    rescue NameError
+      puts "#{modulize(path)}:Module was expected from #{path}"
+      exit
     end
 
     def modulize(path)
