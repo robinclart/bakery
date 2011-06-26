@@ -17,17 +17,14 @@ module Bakery
       private
 
       def create_page(page)
-        if page.data.published        
-          say_status "compile", "#{page.path} -> #{page.template.path}", :cyan
-          result = page.render
+        if page.data.published
+          output = page.render
+          create_file output.path, output, output.options_for_create_file
 
-          unless result[:error]
-            create_file page.output.path, result[:content]
-          else
-            create_file page.output.path, result[:content], force: true, verbose: false
-            say_status "error", page.output.path, :red
-            say "Run 'open #{page.output.path}' for more information on the error."
-            say "Once you have fixed the issue run 'bake #{page.path} -f' to recompile it."
+          if output.error?
+            say_status :error, output.path, :red
+            say output.full_error_message
+            exit
           end
         else
           say_status :skip, page.path, :yellow

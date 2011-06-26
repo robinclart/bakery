@@ -69,7 +69,7 @@ module Bakery
         output.error = e
       end
 
-      { content: output.content, error: output.error? }
+      output
     end
 
     def output

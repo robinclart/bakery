@@ -2,6 +2,7 @@ module Bakery
   class Output
     def initialize(page)
       @pathname = DIRECTORY.join(page.relative_path).cleanpath
+      @error = false
     end
 
     DIRECTORY = Pathname.new("public")
@@ -50,9 +51,18 @@ module Bakery
     def content
       @content ||= @pathname.read
     end
+    alias :to_s :content
+
+    def full_error_message
+      "#{error.class.name}: #{error.message}"
+    end
 
     def error?
       !!@error
+    end
+
+    def options_for_create_file
+      error? ? { force: true, verbose: false } : {}
     end
   end
 end
