@@ -45,6 +45,6 @@ extname: <%=ERB::Util.h extname %>
 template: <%=ERB::Util.h template.path %>
 markdown: <%= "true" if !!path.match(/.md$/) %></code></pre>
     <h2>Data</h2>
-    <pre class="box"><code>data: <%=ERB::Util.h data.instance_variable_get(:@table).inspect %></code></pre>
+    <pre class="box"><code><%= YAML.dump(data.instance_variable_get(:@table)) %>---</code></pre>
   </body>
 </html>
