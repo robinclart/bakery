@@ -59,21 +59,8 @@ module Bakery
       @dirname.to_s
     end
 
-    # Render the page into its template.
-    def render
-      begin
-        output.content = context.render(template.content) { to_html }
-        output.error = false
-      rescue => e
-        output.content = ERB.new(Template::ERROR.read).result(binding)
-        output.error = e
-      end
-
-      output
-    end
-
     def output
-      @output ||= Output.new(self)
+      @output ||= render
     end
 
     # Returns an instance of Template that holds all the information about the
@@ -134,6 +121,21 @@ module Bakery
     end
 
     private
+
+    # Render the page into its template.
+    def render
+      result = Output.new(self)
+
+      begin
+        result.content = context.render(template.content) { to_html }
+        result.error = false
+      rescue => e
+        result.content = ERB.new(Template::ERROR.read).result(binding)
+        result.error = e
+      end
+
+      result
+    end
 
     def route
       @route ||= data.route || Routing.routes.fetch(model.intern, DEFAULT_ROUTE)

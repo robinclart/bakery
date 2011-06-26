@@ -18,13 +18,14 @@ module Bakery
 
       def create_page(page)
         if page.data.published
-          output = page.render
-          create_file output.path, output, output.options_for_create_file
+          page.output.tap do |output|
+            create_file output.path, output, output.options_for_create_file
 
-          if output.error?
-            say_status :error, output.path, :red
-            say output.full_error_message
-            exit
+            if output.error?
+              say_status :error, output.path, :red
+              say output.full_error_message
+              exit
+            end
           end
         else
           say_status :skip, page.path, :yellow
