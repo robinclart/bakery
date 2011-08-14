@@ -1,34 +1,30 @@
 module Bakery
   module Generators
-    class Output < Base
-      namespace "output"
+    class Output < Generator
+      namespace "generate output"
       desc "Generate the output for all pages or for a specific one if the first arguent is a path."
-      argument :path, optional: true
       class_option :force, optional: true, default: false, aliases: ["-f"]
 
-      def compile
-        if path
-          create_page Bakery::Page.new(path)
-        else
-          Bakery::Page.all.each { |p| create_page p }
+      def setup_bake
+        @old_bake = File.read(".baked") if File.exist?(".baked")
+        @new_bake = ""
+      end
+
+      def create_pages
+        Bakery::Page.all.each do |page|
+          if page.data.published.is_a? FalseClass
+            say_status :skip, page.path, :yellow
+          else
+            @new_bake += "#{page.output.path}\n"
+            create_file page.output.path, page.output
+          end
         end
       end
 
-      private
-
-      def create_page(page)
-        if page.data.published
-          page.output.tap do |output|
-            create_file output.path, output, output.options_for_create_file
-
-            if output.error?
-              say_status :error, output.path, :red
-              say output.full_error_message
-              exit
-            end
-          end
-        else
-          say_status :skip, page.path, :yellow
+      def save_baked_file_and_cleanup
+        create_file ".baked", @new_bake, force: true, verbose: false
+        if defined?(@old_bake)
+          @old_bake.split(/\n/).each { |path| remove_file path unless @new_bake.include?(path) }
         end
       end
     end

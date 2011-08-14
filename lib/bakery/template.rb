@@ -1,3 +1,5 @@
+require "pathname"
+
 module Bakery
   # == Template Lookup Procedure
   #
@@ -25,61 +27,42 @@ module Bakery
   # ".htm" instead of ".html" in your file name your template basename should
   # reflect this difference.
   class Template
-    def initialize(page, fallback = "page")
-      @fallback      = [fallback, page.extname].join
-      @from_model    = [page.model, page.extname].join
-      @from_filename = page.filename
-      @from_data     = page.data.template
+    def initialize(filename)
+      @filename = filename
     end
 
     class << self
-      def resolve_pathname(name) #:nodoc:
-        DIRECTORY.join("#{name}.erb")
+      def resolve_pathname(filename) #:nodoc:
+        DIRECTORY.join("#{filename}.erb")
       end
 
-      def resolve_partial_pathname(name)
-        resolve_pathname("_#{name}")
+      def resolve_partial_pathname(filename)
+        resolve_pathname("_#{filename}")
       end
     end
 
-    ERROR = Pathname.new("../templates/error.html.erb").expand_path(__FILE__)
-
     DIRECTORY = Pathname.new("templates")
 
-    attr_reader :fallback
+    BLANK_TEMPLATE = "<%= yield %>"
 
-    attr_reader :from_model
-
-    attr_reader :from_filename
-
-    attr_reader :from_data
+    attr_reader :filename
 
     def pathname
-      @pathname ||= self.class.resolve_pathname(filename)
+      @pathname ||= @filename ? self.class.resolve_pathname(filename) : nil
     end
 
     # Returns the template path for the current page.
     def path
-      pathname.to_s
+      @path ||= @filename ? pathname.to_s : nil
     end
 
     # Returns the content of the page's template.
     def content
-      @content ||= pathname.read
+      @content ||= @filename ? pathname.read : BLANK_TEMPLATE
     end
 
-    # Returns the basename of the page's template (without the ".erb"
-    # extension).
-    def filename
-      filenames.first or fallback
-    end
-
-    private
-
-    def filenames
-      [from_data, from_filename, from_model].compact.select do |f|
-        self.class.resolve_pathname(f).exist?
-      end
+    def exist?
+      !!@filename
     end
   end
 end

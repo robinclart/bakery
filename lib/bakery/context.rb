@@ -1,3 +1,6 @@
+require "erb"
+require "redcarpet"
+
 module Bakery
   class Context
     def initialize(page)
@@ -10,8 +13,8 @@ module Bakery
       ERB.new(source).result(binding)
     end
 
-    def partial(name)
-      render Template.resolve_partial_pathname(name).read
+    def partial(name, object = false)
+      (object ? object.context : self).render Template.resolve_partial_pathname(name).read
     end
 
     def markdown(source)

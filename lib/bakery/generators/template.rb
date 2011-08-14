@@ -1,6 +1,6 @@
 module Bakery
   module Generators
-    class Template < Base
+    class Template < Generator
       namespace "generate template"
       desc "Create a new template."
       argument :title

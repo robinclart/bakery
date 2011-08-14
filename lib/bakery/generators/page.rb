@@ -1,6 +1,6 @@
 module Bakery
   module Generators
-    class Page < Base
+    class Page < Generator
       namespace "generate page"
       desc "Create a new page."
       argument :title

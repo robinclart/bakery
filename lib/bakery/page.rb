@@ -1,11 +1,19 @@
+require "pathname"
+require "date"
+require "time"
+require "yaml"
+require "ostruct"
+require "active_support/inflector"
+
 module Bakery
   class Page
     def initialize(path)
-      @pathname       = Pathname.new(path).cleanpath
-      @dirname        = @pathname.relative_path_from(DIRECTORY).dirname
-      @filename       = @pathname.basename(".md")
-      @extname        = @filename.extname
-      @basename       = @filename.basename(@extname).to_s
+      @pathname = Pathname.new(path).cleanpath
+      @dirname = @pathname.relative_path_from(DIRECTORY).dirname
+      @filename = @pathname.basename(".md")
+      @extname = @filename.extname
+      @basename = @filename.basename(@extname).to_s
+      extract_content_and_yaml
     end
 
     class << self
@@ -38,8 +46,12 @@ module Bakery
       @pathname.to_s
     end
 
+    def exist?
+      @pathname.exist?
+    end
+
     def relative_path
-      @relative_path ||= Pathname.new(interpolate_route + extname).cleanpath.to_s
+      @relative_path ||= Pathname.new(interpolate_route + @extname).cleanpath.to_s
     end
 
     def url
@@ -60,13 +72,13 @@ module Bakery
     end
 
     def output
-      @output ||= render
+      @output ||= Output.new(relative_path, render)
     end
 
     # Returns an instance of Template that holds all the information about the
     # template for the current page.
     def template
-      @template ||= Template.new(self)
+      @template ||= Template.new(template_filename)
     end
 
     # Returns a Context instance tied to the current page. All pages will be
@@ -75,31 +87,17 @@ module Bakery
       @context ||= Context.new(self)
     end
 
-    # Returns the raw content from the page
-    def raw
-      @raw ||= @pathname.read
-    end
-
-    # Returns all the content under the YAML Front Matter stil unprocessed.
-    def content
-      @content ||= raw.split(/---\n/).pop.lstrip
-    end
-
     # Returns all the content under the YAML Front Matter in HTML format.
     # Depending if the file path ends with ".md" or not the content will be
     # processed through <tt>Redcarpet</tt> or not.
     def to_html
-      @html ||= markdown? ? context.markdown(content) : content
-    end
-
-    def markdown?
-      @pathname.extname == ".md"
+      @html ||= markdown? ? context.markdown(@content) : @content
     end
 
     # Returns a freezed OpenStruct loaded with all the data present in the
     # YAML Front Matter.
     def data
-      @data ||= OpenStruct.new(YAML.load(raw)).freeze
+      @data ||= OpenStruct.new(YAML.load(@yaml.to_s))
     end
 
     def interpolate_route
@@ -120,21 +118,20 @@ module Bakery
       end
     end
 
+    def markdown?
+      @pathname.extname == ".md"
+    end
+
     private
+
+    # Returns the raw content from the page
+    def extract_content_and_yaml
+      @content, @yaml = @pathname.read.split("\n+++\n").reverse
+    end
 
     # Render the page into its template.
     def render
-      result = Output.new(self)
-
-      begin
-        result.content = context.render(template.content) { to_html }
-        result.error = false
-      rescue => e
-        result.content = ERB.new(Template::ERROR.read).result(binding)
-        result.error = e
-      end
-
-      result
+      context.render(template.content) { to_html }
     end
 
     def route
@@ -143,6 +140,13 @@ module Bakery
 
     def interpolate_chunk(chunk)
       data.send(chunk).parameterize if data.send(chunk)
+    end
+
+    def template_filename
+      filenames = [data.template, basename, model, "page"]
+        .compact.reverse.uniq.map { |f| [f, extname].join }
+        .select { |f| Template.resolve_pathname(f).exist? }
+      filenames.empty? ? nil : filenames.last
     end
   end
 end

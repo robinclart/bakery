@@ -1,0 +1,4 @@
+Bakery::Routing.draw do
+  root "http://example.com/"
+  route post: "blog/:model/:author/:wrong/:year/:month/:day/:filename"
+end

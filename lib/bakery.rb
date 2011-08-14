@@ -1,26 +1,9 @@
-require "pathname"
-require "date"
-require "time"
-require "yaml"
-require "ostruct"
-require "erb"
-require "redcarpet"
-require "active_support/dependencies/autoload"
-require "active_support/inflector"
-
 require "bakery/version"
 
 module Bakery
-  extend ActiveSupport::Autoload
-
-  autoload :Configuration
-  autoload :Routing
-  autoload :Page
-  autoload :Output
-  autoload :Template
-  autoload :Context
-  autoload :Helpers
-  autoload :Interface
-  autoload :Commands
-  autoload :Generators
+  autoload :Routing,    "bakery/routing"
+  autoload :Page,       "bakery/page"
+  autoload :Output,     "bakery/output"
+  autoload :Template,   "bakery/template"
+  autoload :Context,    "bakery/context"
 end
