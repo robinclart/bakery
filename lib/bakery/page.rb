@@ -13,7 +13,6 @@ module Bakery
       @filename = @pathname.basename(".md")
       @extname = @filename.extname
       @basename = @filename.basename(@extname).to_s
-      @content, @yaml = @pathname.read.split("\n+++\n").reverse
     end
 
     class << self
@@ -39,10 +38,6 @@ module Bakery
 
     attr_reader :basename
 
-    attr_reader :content
-
-    attr_reader :yaml
-
     def path
       @pathname.to_s
     end
@@ -52,7 +47,7 @@ module Bakery
     end
 
     def relative_path
-      @relative_path ||= Pathname.new(interpolate_route + @extname).cleanpath.to_s
+      @relative_path ||= Pathname.new(interpolate_route + extname).cleanpath.to_s
     end
 
     def url
@@ -70,6 +65,16 @@ module Bakery
 
     def dirname
       @dirname.to_s
+    end
+
+    def content
+      extract_content_and_yaml unless defined?(@content)
+      @content
+    end
+
+    def yaml
+      extract_content_and_yaml unless defined?(@yaml)
+      @yaml
     end
 
     def output
@@ -92,13 +97,13 @@ module Bakery
     # Depending if the file path ends with ".md" or not the content will be
     # processed through <tt>Redcarpet</tt> or not.
     def to_html
-      @html ||= markdown? ? context.markdown(@content) : @content
+      @html ||= markdown? ? context.markdown(content) : content
     end
 
     # Returns a freezed OpenStruct loaded with all the data present in the
     # YAML Front Matter.
     def data
-      @data ||= OpenStruct.new(YAML.load(@yaml.to_s))
+      @data ||= OpenStruct.new(YAML.load(yaml.to_s))
     end
 
     def [](key)
@@ -128,6 +133,10 @@ module Bakery
     end
 
     private
+
+    def extract_content_and_yaml
+      @content, @yaml = @pathname.read.split("\n+++\n").reverse
+    end
 
     # Render the page into its template.
     def render
