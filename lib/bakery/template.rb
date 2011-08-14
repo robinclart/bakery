@@ -62,7 +62,7 @@ module Bakery
     end
 
     def exist?
-      !!@filename
+      @filename and pathname.exist?
     end
   end
 end
