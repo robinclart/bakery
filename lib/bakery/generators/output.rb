@@ -1,7 +1,6 @@
 module Bakery
   module Generators
-    class Output < Generator
-      namespace "generate output"
+    class Output < Base
       desc "Generate the output for all pages or for a specific one if the first arguent is a path."
       class_option :force, optional: true, default: false, aliases: ["-f"]
 

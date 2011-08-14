@@ -1,7 +1,6 @@
 module Bakery
   module Generators
-    class New < Generator
-      namespace "new"
+    class New < Base
       desc "Initialize a new bakery repository"
       argument :name
       class_option :force, optional: true, default: false, aliases: ["-f"]

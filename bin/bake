@@ -1,4 +1,4 @@
 #!/usr/bin/env ruby
-require "bakery/cli"
+require "bakery/interface"
 
-Bakery::Interface.start
+Bakery::Interface.run

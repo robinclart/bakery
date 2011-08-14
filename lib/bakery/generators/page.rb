@@ -1,7 +1,6 @@
 module Bakery
   module Generators
-    class Page < Generator
-      namespace "generate page"
+    class Page < Base
       desc "Create a new page."
       argument :title
       argument :fields, optional: true, type: :hash

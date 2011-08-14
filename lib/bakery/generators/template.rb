@@ -1,7 +1,6 @@
 module Bakery
   module Generators
-    class Template < Generator
-      namespace "generate template"
+    class Template < Base
       desc "Create a new template."
       argument :title
       class_option :extension, optional: true, default: "html", aliases: ["-e"]
