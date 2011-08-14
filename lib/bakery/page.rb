@@ -13,7 +13,7 @@ module Bakery
       @filename = @pathname.basename(".md")
       @extname = @filename.extname
       @basename = @filename.basename(@extname).to_s
-      extract_content_and_yaml
+      @content, @yaml = @pathname.read.split("\n+++\n").reverse
     end
 
     class << self
@@ -38,6 +38,10 @@ module Bakery
     attr_reader :extname
 
     attr_reader :basename
+
+    attr_reader :content
+
+    attr_reader :yaml
 
     def path
       @pathname.to_s
@@ -124,11 +128,6 @@ module Bakery
     end
 
     private
-
-    # Returns the raw content from the page
-    def extract_content_and_yaml
-      @content, @yaml = @pathname.read.split("\n+++\n").reverse
-    end
 
     # Render the page into its template.
     def render
