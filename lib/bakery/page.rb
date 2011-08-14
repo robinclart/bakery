@@ -17,13 +17,10 @@ module Bakery
     end
 
     class << self
-      def list
-        Dir.glob DIRECTORY.join("**", "*.*").to_s
+      def to_a
+        Dir[DIRECTORY.join("**", "*.*").to_s].map { |p| self.new(p) }
       end
-
-      def all
-        list.map { |p| self.new(p) }
-      end
+      alias :all :to_a
 
       def where(conditions = {})
         all.select do |page|
@@ -98,6 +95,10 @@ module Bakery
     # YAML Front Matter.
     def data
       @data ||= OpenStruct.new(YAML.load(@yaml.to_s))
+    end
+
+    def [](key)
+      data.send(key)
     end
 
     def interpolate_route
