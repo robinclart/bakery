@@ -2,9 +2,12 @@ require "active_support/inflector"
 
 module Bakery
   module Generators
-    def self.register(name, klass)
+    def self.generators
       @@generators ||= {}
-      @@generators[name.to_sym] = klass.is_a?(Class) ? klass.name : klass.to_s
+    end
+
+    def self.register(name, klass)
+      generators[name.to_sym] = klass.is_a?(Class) ? klass.name : klass.to_s
     end
 
     def self.autoload(mod, filename, register = false)
@@ -13,8 +16,7 @@ module Bakery
     end
 
     def self.invoke(name)
-      @@generators ||= {}
-      @@generators[name.to_sym].constantize
+      generators[name.to_sym].constantize
     rescue
       puts "Invalid generator '#{name}'"
       exit
