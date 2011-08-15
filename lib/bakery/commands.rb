@@ -26,7 +26,8 @@ module Bakery
 
     desc "g(enerate)? [GENERATOR]", "Invoke the given generator", alias: "g"
     def generate(*args)
-      Generators.invoke(ARGV.shift(2).last).start
+      ARGV.shift(2)
+      invoke Generators.const_get(args.first.camelize), ARGV
     end
 
     desc "g [GENERATOR]", "Invoke the given generator", hide: true
