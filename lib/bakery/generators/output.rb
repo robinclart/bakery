@@ -23,7 +23,11 @@ module Bakery
       def save_baked_file_and_cleanup
         create_file ".baked", @new_bake, force: true, verbose: false
         if defined?(@old_bake)
-          @old_bake.split(/\n/).each { |path| remove_file path unless @new_bake.include?(path) }
+          @old_bake.split(/\n/).each do |path|
+            unless @new_bake.include?(path)
+              remove_file path if File.exist?(path)
+            end
+          end
         end
       end
     end
