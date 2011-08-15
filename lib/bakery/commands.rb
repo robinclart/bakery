@@ -26,24 +26,10 @@ module Bakery
 
     desc "g(enerate)? [GENERATOR]", "Invoke the given generator", alias: "g"
     def generate(*args)
-      ARGV.shift
-      unless ARGV.first == "base"
-        constantize_generator(ARGV.shift).start
-      else
-        say "Invalid generator 'base'"
-      end
+      Generators.invoke(ARGV.shift(2).last).start
     end
 
     desc "g [GENERATOR]", "Invoke the given generator", hide: true
     alias :g :generate
-
-    private
-
-    def constantize_generator(name)
-      "bakery/generators/#{name}".camelize.constantize.start
-    rescue
-      say "Invalid generator '#{name}'"
-      exit
-    end
   end
 end
