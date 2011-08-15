@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.version     = Bakery::VERSION
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Robin Clart"]
-  s.email       = ["robin@charlin.be"]
+  s.email       = ["robin@clart.be"]
   s.homepage    = "http://rubygems.org/gems/bakery"
   s.summary     = "A static website generator"
   s.description = "Bakery makes it easy to maintain a file based website."
