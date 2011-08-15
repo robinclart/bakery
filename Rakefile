@@ -12,7 +12,6 @@ desc "Build the documentation"
 task :doc do
   sh [
     "rm -rf doc/",
-    "sdoc -N -x generators -x test -x pkg -x bin -x '(Rake|Gem)file(.lock)?' -x 'bakery.gemspec' -m 'README.rdoc' -t 'Bakery #{Bakery::VERSION}'",
-    "open doc/index.html"
+    "sdoc -N -x generators -x commands -x interface -x test -x pkg -x bin -x '(Rake|Gem)file(.lock)?' -x 'bakery.gemspec' -m 'README.rdoc' -t 'Bakery #{Bakery::VERSION}'"
   ].join(" && ")
 end
