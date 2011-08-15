@@ -13,7 +13,6 @@ Gem::Specification.new do |s|
   s.description = "Bakery makes it easy to maintain a file based website."
 
   s.required_rubygems_version = ">= 1.3.6"
-  s.rubyforge_project         = "bakery"
 
   s.add_dependency "activesupport", ">= 3.0.9"
   s.add_dependency "i18n", ">= 0.6.0"
