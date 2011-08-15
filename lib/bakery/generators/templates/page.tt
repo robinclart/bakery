@@ -4,6 +4,4 @@ published_at: <%= Date.today.strftime("%d %b %Y") %>
 <% if fields %><% fields.each do |k,v| %><%= "#{k}: #{v}\n" %><% end %><% end %>
 +++
 
-# <%= title %>
-
 Your content goes here...
