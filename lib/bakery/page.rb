@@ -135,7 +135,7 @@ module Bakery
     private
 
     def extract_content_and_yaml
-      @content, @yaml = @pathname.read.split("\n+++\n").reverse
+      @content, @yaml = @pathname.read.split("\n+++\n", 2).reverse
     end
 
     # Render the page into its template.
