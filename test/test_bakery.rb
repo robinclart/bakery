@@ -62,6 +62,13 @@ class Bakery::TestPage < MiniTest::Unit::TestCase
     assert_equal "post", @post.model
   end
 
+  def test_data
+    assert_equal "index", @home.data.title
+    assert_equal "index", @home[:title]
+    assert_equal "Hello World", @post.data.title
+    assert_equal "Hello World", @post[:title]
+  end
+
   def test_if_markdown
     assert_instance_of TrueClass, @home.markdown?
   end
